@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { Globe, Bell, LayoutDashboard, BookOpen, FileText, Library, Settings, Plus, MessageSquare, ArrowLeft, CheckCircle2, Circle, Star, ArrowRight, ShieldCheck, Mail, Share2, Award, Zap, Compass, Monitor, Video, Send, Loader2, RefreshCw } from 'lucide-react';
+import { Globe, Bell, LayoutDashboard, BookOpen, FileText, Library, Settings, Plus, MessageSquare, ArrowLeft, CheckCircle2, Circle, Star, ArrowRight, ShieldCheck, Mail, Share2, Award, Zap, Compass, Monitor } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 // Assets
 import leafVideo from './assets/Leaf_And_Sun_Animation_Generation.mp4';
 import plantVideo from './assets/Animated_Happy_Potted_Plant_Video.mp4';
-
+import heroImage from './assets/vidyapath_hero_students.png';
 
 const TRANSLATIONS = {
   English: {
@@ -28,42 +28,42 @@ const TRANSLATIONS = {
     minRead: "min read", aiTeacher: "AI Teacher"
   },
   Hindi: {
-    courses: "αñ¬αñ╛αñáαÑìαñ»αñòαÑìαñ░αñ«", library: "αñ¬αÑüαñ╕αÑìαññαñòαñ╛αñ▓αñ»", mentors: "αñ«αñ╛αñ░αÑìαñùαñªαñ░αÑìαñ╢αñò",
-    newYear: "αñ¿αñ»αñ╛ αñ╢αÑêαñòαÑìαñ╖αñúαñ┐αñò αñ╡αñ░αÑìαñ╖ 2024",
-    titleLines: ["αñ£αñ╣αñ╛αñü", "αñ¬αñ░αñéαñ¬αñ░αñ╛", "αñåαñºαÑüαñ¿αñ┐αñò", "αñëαññαÑìαñòαÑâαñ╖αÑìαñƒαññαñ╛ αñ╕αÑç αñ«αñ┐αñ▓αññαÑÇ αñ╣αÑê"],
-    subtitle: "αñòαñ╛αñ▓αñ╛αññαÑÇαññ αñ╢αÑêαñòαÑìαñ╖αñúαñ┐αñò αñ£αÑìαñ₧αñ╛αñ¿ αñöαñ░ αñåαñºαÑüαñ¿αñ┐αñò αñíαñ┐αñ£αñ┐αñƒαñ▓ αñ¬αñ░αñ┐αñªαÑâαñ╢αÑìαñ» αñòαÑç αñ¼αÑÇαñÜ αñòαÑÇ αñûαñ╛αñê αñòαÑï αñ¬αñ╛αñƒαÑçαñéαÑñ αñ╡αñ┐αñªαÑìαñ╡αñ╛αñ¿αÑïαñé αñöαñ░ αñ╕αÑÇαñûαñ¿αÑç αñ╡αñ╛αñ▓αÑïαñé αñòαÑç αñ▓αñ┐αñÅ αñÅαñò αñòαÑçαñéαñªαÑìαñ░αñ┐αññ αñàαñ¡αñ»αñ╛αñ░αñúαÑìαñ»αÑñ",
-    getStarted: "αñ╢αÑüαñ░αÑé αñòαñ░αÑçαñé", exploreCourses: "αñ¬αñ╛αñáαÑìαñ»αñòαÑìαñ░αñ« αñûαÑïαñ£αÑçαñé", trusted: "αÑ¿αÑª αñ╣αñ£αñ╛αñ░+ αñ¢αñ╛αññαÑìαñ░αÑïαñé αñªαÑìαñ╡αñ╛αñ░αñ╛ αñ╡αñ┐αñ╢αÑìαñ╡αñ╕αñ¿αÑÇαñ»",
-    welcomeBack: "αñ╕αÑìαñ╡αñ╛αñùαññ αñ╣αÑê", masteredConcepts: "αñåαñ¬αñ¿αÑç αÑ⌐ αñ¿αñê αñàαñ╡αñºαñ╛αñ░αñúαñ╛αñôαñé αñ«αÑçαñé αñ«αñ╣αñ╛αñ░αññ αñ╣αñ╛αñ╕αñ┐αñ▓ αñòαÑÇ αñ╣αÑê:",
-    keepPace: "αñçαñ╕ αñ╕αñ¬αÑìαññαñ╛αñ╣αÑñ αñ╡αñ┐αñªαÑìαñ╡αññαÑìαññαñ╛αñ¬αÑéαñ░αÑìαñú αñùαññαñ┐ αñ¼αñ¿αñ╛αñÅ αñ░αñûαÑçαñé!", dailyGoal: "αñªαÑêαñ¿αñ┐αñò αñ▓αñòαÑìαñ╖αÑìαñ»: 80% αñ¬αÑéαñ░αÑìαñú",
-    weekly: "αñ╕αñ╛αñ¬αÑìαññαñ╛αñ╣αñ┐αñò", yourSubjects: "αñåαñ¬αñòαÑç αñ╡αñ┐αñ╖αñ»", viewCurriculum: "αñ¬αñ╛αñáαÑìαñ»αñòαÑìαñ░αñ« αñªαÑçαñûαÑçαñé",
-    mastery: "αñ«αñ╣αñ╛αñ░αññ", modulesCompleted: "αñ«αÑëαñíαÑìαñ»αÑéαñ▓ αñ¬αÑéαñ░αÑìαñú", enrollNewSubject: "αñ¿αñÅ αñ╡αñ┐αñ╖αñ» αñ«αÑçαñé αñ¿αñ╛αñ«αñ╛αñéαñòαñ¿ αñòαñ░αÑçαñé",
-    backHome: "αñ╣αÑïαñ« αñ¬αñ░ αñ╡αñ╛αñ¬αñ╕ αñ£αñ╛αñÅαñü", createProfile: "αñàαñ¬αñ¿αÑÇ αñ¬αÑìαñ░αÑïαñ½αñ╝αñ╛αñçαñ▓ αñ¼αñ¿αñ╛αñÅαñü", joinCommunity: "αñåαñ£αÑÇαñ╡αñ¿ αñ╕αÑÇαñûαñ¿αÑç αñ╡αñ╛αñ▓αÑïαñé αñòαÑç αñ╕αñ«αÑüαñªαñ╛αñ» αñ«αÑçαñé αñ╢αñ╛αñ«αñ┐αñ▓ αñ╣αÑïαñéαÑñ",
-    fullName: "αñ¬αÑéαñ░αñ╛ αñ¿αñ╛αñ«", enterName: "αñàαñ¬αñ¿αñ╛ αñ¬αÑéαñ░αñ╛ αñ¿αñ╛αñ« αñªαñ░αÑìαñ£ αñòαñ░αÑçαñé", className: "αñòαñòαÑìαñ╖αñ╛", selectClass: "αñòαñòαÑìαñ╖αñ╛ αñÜαÑüαñ¿αÑçαñé",
-    board: "αñ¼αÑïαñ░αÑìαñí", selectBoard: "αñ¼αÑïαñ░αÑìαñí αñÜαÑüαñ¿αÑçαñé", preferredLanguage: "αñ¬αñ╕αñéαñªαÑÇαñªαñ╛ αñ¡αñ╛αñ╖αñ╛", beginLearning: "αñ╕αÑÇαñûαñ¿αñ╛ αñ╢αÑüαñ░αÑé αñòαñ░αÑçαñé",
-    studentPortal: "αñ¢αñ╛αññαÑìαñ░ αñ¬αÑïαñ░αÑìαñƒαñ▓", dashboard: "αñíαÑêαñ╢αñ¼αÑïαñ░αÑìαñí", myLearning: "αñ«αÑçαñ░αÑÇ αñ╢αñ┐αñòαÑìαñ╖αñ╛", assignments: "αñòαñ╛αñ░αÑìαñ»",
-    settings: "αñ╕αÑçαñƒαñ┐αñéαñùαÑìαñ╕", startStudying: "αñ¬αñóαñ╝αñ╛αñê αñ╢αÑüαñ░αÑé αñòαñ░αÑçαñé", back: "αñ╡αñ╛αñ¬αñ╕", topics: "αñ╡αñ┐αñ╖αñ»",
-    generatingCurriculum: "αñ¬αñ╛αñáαÑìαñ»αñòαÑìαñ░αñ« αñëαññαÑìαñ¬αñ¿αÑìαñ¿ αñ╣αÑï αñ░αñ╣αñ╛ αñ╣αÑê...", chapterText: "αñàαñºαÑìαñ»αñ╛αñ»", startReading: "αñ¬αñóαñ╝αñ¿αñ╛ αñ╢αÑüαñ░αÑé αñòαñ░αÑçαñé",
-    backCurriculum: "αñ¬αñ╛αñáαÑìαñ»αñòαÑìαñ░αñ« αñ¬αñ░ αñ╡αñ╛αñ¬αñ╕ αñ£αñ╛αñÅαñü", markComplete: "αñàαñºαÑìαñ»αñ╛αñ» αñòαÑï αñ¬αÑéαñ░αÑìαñú αñòαÑç αñ░αÑéαñ¬ αñ«αÑçαñé αñÜαñ┐αñ╣αÑìαñ¿αñ┐αññ αñòαñ░αÑçαñé", chapterComplete: "αñàαñºαÑìαñ»αñ╛αñ» αñ¬αÑéαñ░αÑìαñú! αñëαññαÑìαñòαÑâαñ╖αÑìαñƒ αñòαñ╛αñ░αÑìαñ»αÑñ",
-    minRead: "αñ«αñ┐αñ¿αñƒ αñòαÑÇ αñ¬αñóαñ╝αñ╛αñê", aiTeacher: "αñÅαñåαñê αñ╢αñ┐αñòαÑìαñ╖αñò"
+    courses: "पाठ्यक्रम", library: "पुस्तकालय", mentors: "मार्गदर्शक",
+    newYear: "नया शैक्षणिक वर्ष 2024",
+    titleLines: ["जहाँ", "परंपरा", "आधुनिक", "उत्कृष्टता से मिलती है"],
+    subtitle: "कालातीत शैक्षणिक ज्ञान और आधुनिक डिजिटल परिदृश्य के बीच की खाई को पाटें। विद्वानों और सीखने वालों के लिए एक केंद्रित अभयारण्य।",
+    getStarted: "शुरू करें", exploreCourses: "पाठ्यक्रम खोजें", trusted: "२० हजार+ छात्रों द्वारा विश्वसनीय",
+    welcomeBack: "स्वागत है", masteredConcepts: "आपने ३ नई अवधारणाओं में महारत हासिल की है:",
+    keepPace: "इस सप्ताह। विद्वत्तापूर्ण गति बनाए रखें!", dailyGoal: "दैनिक लक्ष्य: 80% पूर्ण",
+    weekly: "साप्ताहिक", yourSubjects: "आपके विषय", viewCurriculum: "पाठ्यक्रम देखें",
+    mastery: "महारत", modulesCompleted: "मॉड्यूल पूर्ण", enrollNewSubject: "नए विषय में नामांकन करें",
+    backHome: "होम पर वापस जाएँ", createProfile: "अपनी प्रोफ़ाइल बनाएँ", joinCommunity: "आजीवन सीखने वालों के समुदाय में शामिल हों।",
+    fullName: "पूरा नाम", enterName: "अपना पूरा नाम दर्ज करें", className: "कक्षा", selectClass: "कक्षा चुनें",
+    board: "बोर्ड", selectBoard: "बोर्ड चुनें", preferredLanguage: "पसंदीदा भाषा", beginLearning: "सीखना शुरू करें",
+    studentPortal: "छात्र पोर्टल", dashboard: "डैशबोर्ड", myLearning: "मेरी शिक्षा", assignments: "कार्य",
+    settings: "सेटिंग्स", startStudying: "पढ़ाई शुरू करें", back: "वापस", topics: "विषय",
+    generatingCurriculum: "पाठ्यक्रम उत्पन्न हो रहा है...", chapterText: "अध्याय", startReading: "पढ़ना शुरू करें",
+    backCurriculum: "पाठ्यक्रम पर वापस जाएँ", markComplete: "अध्याय को पूर्ण के रूप में चिह्नित करें", chapterComplete: "अध्याय पूर्ण! उत्कृष्ट कार्य।",
+    minRead: "मिनट की पढ़ाई", aiTeacher: "एआई शिक्षक"
   },
   Sanskrit: {
-    courses: "αñ¬αñ╛αñáαÑìαñ»αñòαÑìαñ░αñ«αñ╛αñâ", library: "αñùαÑìαñ░αñ¿αÑìαñÑαñ╛αñ▓αñ»αñâ", mentors: "αñùαÑüαñ░αñ╡αñâ",
-    newYear: "αñ¿αÑéαññαñ¿ αñ╢αÑêαñòαÑìαñ╖αñ┐αñò αñ╡αñ░αÑìαñ╖ 2024",
-    titleLines: ["αñ»αññαÑìαñ░", "αñ¬αñ░αñ«αÑìαñ¬αñ░αñ╛", "αñåαñºαÑüαñ¿αñ┐αñò", "αñëαññαÑìαñòαñ░αÑìαñ╖αÑçαñú αñ«αñ┐αñ▓αññαñ┐"],
-    subtitle: "αñ¬αñ░αñ«αÑìαñ¬αñ░αñ╛αñùαññ αñ╡αñ┐αñªαÑìαñ»αñ╛αñ»αñ╛αñâ αñåαñºαÑüαñ¿αñ┐αñò αññαñ¿αÑìαññαÑìαñ░αñ£αÑìαñ₧αñ╛αñ¿αñ╕αÑìαñ» αñÜ αñ╕αÑçαññαÑüαñâαÑñ αñ╡αñ┐αñªαÑüαñ╖αñ╛αñé, αñ╡αñ┐αñªαÑìαñ»αñ╛αñ░αÑìαñÑαñ┐αñ¿αñ╛αñé αñÜ αñòαÑâαññαÑç αñÅαñòαñé αñ«αÑüαñûαÑìαñ»αñé αñ╢αñ░αñúαñ«αÑìαÑñ",
-    getStarted: "αñåαñ░αñ«αÑìαñ¡αñé αñòαÑüαñ░αÑìαñ╡αñ¿αÑìαññαÑü", exploreCourses: "αñ¬αñ╛αñáαÑìαñ»αñòαÑìαñ░αñ«αñ╛αñ¿αÑì αñ¬αñ╢αÑìαñ»αñ¿αÑìαññαÑü", trusted: "αÑ¿αÑª αñ╕αñ╣αñ╕αÑìαñ░αñ╡αñ┐αñªαÑìαñ»αñ╛αñ░αÑìαñÑαñ┐αñ¡αñ┐αñâ αñ╡αñ┐αñ╢αÑìαñ╡αñ╕αñ┐αññαñ«αÑì",
-    welcomeBack: "αñ╕αÑìαñ╡αñ╛αñùαññαñ«αÑì", masteredConcepts: "αñ¡αñ╡αññαñ╛ αÑ⌐ αñ¿αÑéαññαñ¿αñ╛αñâ αñàαñ╡αñºαñ╛αñ░αñúαñ╛αñâ αñàαñºαÑÇαññαñ╛αñâ:",
-    keepPace: "αñàαñ╕αÑìαñ«αñ┐αñ¿αÑì αñ╕αñ¬αÑìαññαñ╛αñ╣αÑçαÑñ αñ╡αñ┐αñªαÑìαñ╡αññαÑìαññαñ╛αñ¬αÑéαñ░αÑìαñúαñé αñ╡αÑçαñùαñé αñºαñ╛αñ░αñ»αññαÑü!", dailyGoal: "αñªαÑêαñ¿αñ┐αñò αñ▓αñòαÑìαñ╖αÑìαñ»αñ«αÑì: 80% αñ¬αÑéαñ░αÑìαñúαñ«αÑì",
-    weekly: "αñ╕αñ╛αñ¬αÑìαññαñ╛αñ╣αñ┐αñòαñ«αÑì", yourSubjects: "αñ¡αñ╡αññαñâ αñ╡αñ┐αñ╖αñ»αñ╛αñâ", viewCurriculum: "αñ¬αñ╛αñáαÑìαñ»αñòαÑìαñ░αñ«αñé αñ¬αñ╢αÑìαñ»αñ¿αÑìαññαÑü",
-    mastery: "αñ¬αÑìαñ░αñ╛αñ╡αÑÇαñúαÑìαñ»αñ«αÑì", modulesCompleted: "αñàαñºαÑìαñ»αñ╛αñ»αñ╛αñâ αñ¬αÑéαñ░αÑìαñúαñ╛αñâ", enrollNewSubject: "αñ¿αÑéαññαñ¿αñ╡αñ┐αñ╖αñ»αÑç αñ¬αñ₧αÑìαñ£αÑÇαñòαñ░αñúαñé αñòαÑüαñ░αÑìαñ╡αñ¿αÑìαññαÑü",
-    backHome: "αñ«αÑüαñûαÑìαñ»αñ¬αÑâαñ╖αÑìαñáαñé αñ¬αÑìαñ░αññαñ┐ αñùαñÜαÑìαñ¢αñ¿αÑìαññαÑü", createProfile: "αñ╕αÑìαñ╡αñ╕αÑìαñ» αñ¬αñ░αñ┐αñÜαñ»αñé αñ░αñÜαñ»αñ¿αÑìαññαÑü", joinCommunity: "αñåαñ£αÑÇαñ╡αñ¿αñé αñ¬αñáαññαñ╛αñé αñ╕αñ«αÑüαñªαñ╛αñ»αÑç αñàαñ¿αÑìαññαñ░αÑìαñ¡αñ╡αñ¿αÑìαññαÑüαÑñ",
-    fullName: "αñ¬αÑéαñ░αÑìαñúαñ¿αñ╛αñ«", enterName: "αñ╕αÑìαñ╡αñ╕αÑìαñ» αñ¬αÑéαñ░αÑìαñúαñ¿αñ╛αñ« αñ▓αñ┐αñûαñ¿αÑìαññαÑü", className: "αñòαñòαÑìαñ╖αñ╛", selectClass: "αñòαñòαÑìαñ╖αñ╛αñé αñÜαñ┐αñ¿αÑìαñ╡αñ¿αÑìαññαÑü",
-    board: "αñ«αñúαÑìαñíαñ▓αñ«αÑì", selectBoard: "αñ«αñúαÑìαñíαñ▓αñé αñÜαñ┐αñ¿αÑìαñ╡αñ¿αÑìαññαÑü", preferredLanguage: "αñçαñ╖αÑìαñƒαñ╛ αñ¡αñ╛αñ╖αñ╛", beginLearning: "αñàαñºαÑìαñ»αñ»αñ¿αñ«αÑì αñåαñ░αñ¡αñ╕αÑìαñ╡",
-    studentPortal: "αñ¢αñ╛αññαÑìαñ░-αñ¬αÑüαñƒαñ«αÑì", dashboard: "αñ«αÑüαñûαÑìαñ»αñ½αñ▓αñòαñ«αÑì", myLearning: "αñ«αñ« αñ╢αñ┐αñòαÑìαñ╖αñ╛", assignments: "αñòαñ╛αñ░αÑìαñ»αñ╛αñúαñ┐",
-    settings: "αñ¬αÑìαñ░αñ¼αñ¿αÑìαñºαñâ", startStudying: "αñàαñºαÑìαñ»αñ»αñ¿αñ«αÑì αñåαñ░αñ¡αñ╕αÑìαñ╡", back: "αñ¬αÑâαñ╖αÑìαñáαññαñâ", topics: "αñ╡αñ┐αñ╖αñ»αñ╛αñâ",
-    generatingCurriculum: "αñ¬αñ╛αñáαÑìαñ»αñòαÑìαñ░αñ«αñâ αñ£αñ¿αÑìαñ»αññαÑç...", chapterText: "αñàαñºαÑìαñ»αñ╛αñ»αñâ", startReading: "αñ¬αñáαñ¿αñ«αÑì αñåαñ░αñ¡αñ╕αÑìαñ╡",
-    backCurriculum: "αñ¬αñ╛αñáαÑìαñ»αñòαÑìαñ░αñ«αñé αñ¬αÑìαñ░αññαñ┐ αñùαñÜαÑìαñ¢αñ¿αÑìαññαÑü", markComplete: "αñàαñºαÑìαñ»αñ╛αñ»αñé αñ¬αÑéαñ░αÑìαñúαñ«αñ┐αññαñ┐ αñàαñÖαÑìαñòαñ»αñ¿αÑìαññαÑü", chapterComplete: "αñàαñºαÑìαñ»αñ╛αñ»αñâ αñ¬αÑéαñ░αÑìαñúαñâ! αñëαññαÑìαññαñ«αñé αñòαñ╛αñ░αÑìαñ»αñ«αÑìαÑñ",
-    minRead: "αñ¿αñ┐αñ«αÑçαñ╖αñ╛αññαÑìαñ«αñòαñ«αñºαÑìαñ»αñ»αñ¿αñ«αÑì", aiTeacher: "αñÅαñåαñê-αñùαÑüαñ░αÑüαñâ"
+    courses: "पाठ्यक्रमाः", library: "ग्रन्थालयः", mentors: "गुरवः",
+    newYear: "नूतन शैक्षिक वर्ष 2024",
+    titleLines: ["यत्र", "परम्परा", "आधुनिक", "उत्कर्षेण मिलति"],
+    subtitle: "परम्परागत विद्यायाः आधुनिक तन्त्रज्ञानस्य च सेतुः। विदुषां, विद्यार्थिनां च कृते एकं मुख्यं शरणम्।",
+    getStarted: "आरम्भं कुर्वन्तु", exploreCourses: "पाठ्यक्रमान् पश्यन्तु", trusted: "२० सहस्रविद्यार्थिभिः विश्वसितम्",
+    welcomeBack: "स्वागतम्", masteredConcepts: "भवता ३ नूतनाः अवधारणाः अधीताः:",
+    keepPace: "अस्मिन् सप्ताहे। विद्वत्तापूर्णं वेगं धारयतु!", dailyGoal: "दैनिक लक्ष्यम्: 80% पूर्णम्",
+    weekly: "साप्ताहिकम्", yourSubjects: "भवतः विषयाः", viewCurriculum: "पाठ्यक्रमं पश्यन्तु",
+    mastery: "प्रावीण्यम्", modulesCompleted: "अध्यायाः पूर्णाः", enrollNewSubject: "नूतनविषये पञ्जीकरणं कुर्वन्तु",
+    backHome: "मुख्यपृष्ठं प्रति गच्छन्तु", createProfile: "स्वस्य परिचयं रचयन्तु", joinCommunity: "आजीवनं पठतां समुदाये अन्तर्भवन्तु।",
+    fullName: "पूर्णनाम", enterName: "स्वस्य पूर्णनाम लिखन्तु", className: "कक्षा", selectClass: "कक्षां चिन्वन्तु",
+    board: "मण्डलम्", selectBoard: "मण्डलं चिन्वन्तु", preferredLanguage: "इष्टा भाषा", beginLearning: "अध्ययनम् आरभस्व",
+    studentPortal: "छात्र-पुटम्", dashboard: "मुख्यफलकम्", myLearning: "मम शिक्षा", assignments: "कार्याणि",
+    settings: "प्रबन्धः", startStudying: "अध्ययनम् आरभस्व", back: "पृष्ठतः", topics: "विषयाः",
+    generatingCurriculum: "पाठ्यक्रमः जन्यते...", chapterText: "अध्यायः", startReading: "पठनम् आरभस्व",
+    backCurriculum: "पाठ्यक्रमं प्रति गच्छन्तु", markComplete: "अध्यायं पूर्णमिति अङ्कयन्तु", chapterComplete: "अध्यायः पूर्णः! उत्तमं कार्यम्।",
+    minRead: "निमेषात्मकमध्ययनम्", aiTeacher: "एआई-गुरुः"
   }
 };
 
@@ -72,25 +72,25 @@ const getData = (lang) => {
   if (lang === 'Hindi') {
     return {
       SUBJECTS: [
-        { id: "maths", title: 'αñùαñúαñ┐αññ', desc: 'αñòαÑêαñ▓αñòαÑüαñ▓αñ╕ αñöαñ░ αññαÑìαñ░αñ┐αñòαÑïαñúαñ«αñ┐αññαñ┐ αñ«αÑéαñ▓ αñ¼αñ╛αññαÑçαñé', icon: '≡ƒº«', iconBg: 'bg-orange-100', iconColor: 'text-orange-500', progress: 85, modules: 12 },
-        { id: "science", title: 'αñ╡αñ┐αñ£αÑìαñ₧αñ╛αñ¿', desc: 'αñòαñ╛αñ░αÑìαñ¼αñ¿αñ┐αñò αñ░αñ╕αñ╛αñ»αñ¿ αñöαñ░ αñòαñú αñ¡αÑîαññαñ┐αñòαÑÇ', icon: '≡ƒö¼', iconBg: 'bg-green-100', iconColor: 'text-green-500', progress: 64, modules: 9 },
-        { id: "social", title: 'αñ╕αñ╛αñ«αñ╛αñ£αñ┐αñò αñ╡αñ┐αñ£αÑìαñ₧αñ╛αñ¿', desc: 'αñåαñºαÑüαñ¿αñ┐αñò αñ¡αñ╛αñ░αññαÑÇαñ» αñçαññαñ┐αñ╣αñ╛αñ╕ αñöαñ░ αñ¿αñ╛αñùαñ░αñ┐αñò αñ╢αñ╛αñ╕αÑìαññαÑìαñ░', icon: '≡ƒîÄ', iconBg: 'bg-blue-100', iconColor: 'text-blue-500', progress: 42, modules: 5 },
-        { id: "english", title: 'αñàαñéαñùαÑìαñ░αÑçαñ£αñ╝αÑÇ', desc: 'αñòαñ╡αñ┐αññαñ╛, αñàαñ▓αñéαñòαñ╛αñ░ αñöαñ░ αñëαñ¿αÑìαñ¿αññ αñ╡αÑìαñ»αñ╛αñòαñ░αñú', icon: '≡ƒôû', iconBg: 'bg-purple-100', iconColor: 'text-purple-500', progress: 91, modules: 18 },
-        { id: "hindi", title: 'αñ╣αñ┐αñ¿αÑìαñªαÑÇ', desc: 'αñ╕αñ╛αñ╣αñ┐αññαÑìαñ» αñöαñ░ αñ░αñÜαñ¿αñ╛αññαÑìαñ«αñò αñ▓αÑçαñûαñ¿', icon: 'αñà', iconBg: 'bg-pink-100', iconColor: 'text-pink-500', progress: 78, modules: 11 }
+        { id: "maths", title: 'गणित', desc: 'कैलकुलस और त्रिकोणमिति मूल बातें', icon: '🧮', iconBg: 'bg-orange-100', iconColor: 'text-orange-500', progress: 85, modules: 12 },
+        { id: "science", title: 'विज्ञान', desc: 'कार्बनिक रसायन और कण भौतिकी', icon: '🔬', iconBg: 'bg-green-100', iconColor: 'text-green-500', progress: 64, modules: 9 },
+        { id: "social", title: 'सामाजिक विज्ञान', desc: 'आधुनिक भारतीय इतिहास और नागरिक शास्त्र', icon: '🌎', iconBg: 'bg-blue-100', iconColor: 'text-blue-500', progress: 42, modules: 5 },
+        { id: "english", title: 'अंग्रेज़ी', desc: 'कविता, अलंकार और उन्नत व्याकरण', icon: '📖', iconBg: 'bg-purple-100', iconColor: 'text-purple-500', progress: 91, modules: 18 },
+        { id: "hindi", title: 'हिन्दी', desc: 'साहित्य और रचनात्मक लेखन', icon: 'अ', iconBg: 'bg-pink-100', iconColor: 'text-pink-500', progress: 78, modules: 11 }
       ],
       SCIENCE_CHAPTERS: [
-        { id: 1, title: "αñ¬αÑîαñºαÑïαñé αñ«αÑçαñé αñ¬αÑïαñ╖αñú", topics: 6, done: true },
-        { id: 2, title: "αñ¬αÑìαñ░αñ╛αñúαñ┐αñ»αÑïαñé αñ«αÑçαñé αñ¬αÑïαñ╖αñú", topics: 5, done: true },
-        { id: 3, title: "αñ░αÑçαñ╢αÑïαñé αñ╕αÑç αñ╡αñ╕αÑìαññαÑìαñ░ αññαñò", topics: 4, done: false },
-        { id: 4, title: "αñèαñ╖αÑìαñ«αñ╛", topics: 7, done: false },
-        { id: 5, title: "αñàαñ«αÑìαñ▓, αñòαÑìαñ╖αñ╛αñ░αñò αñöαñ░ αñ▓αñ╡αñú", topics: 6, done: false }
+        { id: 1, title: "पौधों में पोषण", topics: 6, done: true },
+        { id: 2, title: "प्राणियों में पोषण", topics: 5, done: true },
+        { id: 3, title: "रेशों से वस्त्र तक", topics: 4, done: false },
+        { id: 4, title: "ऊष्मा", topics: 7, done: false },
+        { id: 5, title: "अम्ल, क्षारक और लवण", topics: 6, done: false }
       ],
       CHAPTER_1_CONTENT: [
-        { type: "text", content: "αñ╕αñ¡αÑÇ αñ╕αñ£αÑÇαñ╡αÑïαñé αñòαÑï αñ¡αÑïαñ£αñ¿ αñòαÑÇ αñåαñ╡αñ╢αÑìαñ»αñòαññαñ╛ αñ╣αÑïαññαÑÇ αñ╣αÑêαÑñ αñ¬αÑîαñºαÑç αñ╣αÑÇ αñÅαñòαñ«αñ╛αññαÑìαñ░ αñÉαñ╕αÑç αñ£αÑÇαñ╡ αñ╣αÑêαñé αñ£αÑï αñàαñ¬αñ¿αñ╛ αñ¡αÑïαñ£αñ¿ αñ╕αÑìαñ╡αñ»αñé αñ¼αñ¿αñ╛ αñ╕αñòαññαÑç αñ╣αÑêαñéαÑñ αñ╡αÑç αñÉαñ╕αñ╛ αñ¬αÑìαñ░αñòαñ╛αñ╢ αñ╕αñéαñ╢αÑìαñ▓αÑçαñ╖αñú αñ¿αñ╛αñ«αñò αñ¬αÑìαñ░αñòαÑìαñ░αñ┐αñ»αñ╛ αñòαÑç αñ«αñ╛αñºαÑìαñ»αñ« αñ╕αÑç αñòαñ░αññαÑç αñ╣αÑêαñéαÑñ αñçαñ╕ αñ¬αÑìαñ░αñòαÑìαñ░αñ┐αñ»αñ╛ αñ«αÑçαñé, αñ¬αÑîαñºαÑç αñ╕αÑéαñ░αÑìαñ» αñòαÑç αñ¬αÑìαñ░αñòαñ╛αñ╢, αñ¬αñ╛αñ¿αÑÇ αñöαñ░ αñòαñ╛αñ░αÑìαñ¼αñ¿ αñíαñ╛αñçαñæαñòαÑìαñ╕αñ╛αñçαñí αñòαñ╛ αñëαñ¬αñ»αÑïαñù αñòαñ░αñòαÑç αñùαÑìαñ▓αÑéαñòαÑïαñ£ αñ¼αñ¿αñ╛αññαÑç αñ╣αÑêαñé ΓÇö αñ£αÑï αñëαñ¿αñòαÑÇ αñèαñ░αÑìαñ£αñ╛ αñòαñ╛ αñ¬αÑìαñ░αñ╛αñÑαñ«αñ┐αñò αñ╕αÑìαñ░αÑïαññ αñ╣αÑêαÑñ" },
-        { type: "avatar_video", topic: "αñ¬αÑîαñºαÑç αñàαñ¬αñ¿αñ╛ αñ¡αÑïαñ£αñ¿ αñòαÑêαñ╕αÑç αñ¼αñ¿αñ╛αññαÑç αñ╣αÑêαñé", video: leafVideo, thumbnail: "https://placehold.co/640x360/F5A623/FFFFFF?text=AI+Teacher+Γû╢", languages: ["English", "Hindi", "Sanskrit"] },
-        { type: "text", content: "αñ¬αÑìαñ░αñòαñ╛αñ╢ αñ╕αñéαñ╢αÑìαñ▓αÑçαñ╖αñú αñ«αÑüαñûαÑìαñ» αñ░αÑéαñ¬ αñ╕αÑç αñ¬αÑîαñºαÑïαñé αñòαÑÇ αñ¬αññαÑìαññαñ┐αñ»αÑïαñé αñ«αÑçαñé αñ╣αÑïαññαñ╛ αñ╣αÑêαÑñ αñ¬αññαÑìαññαñ┐αñ»αÑïαñé αñ«αÑçαñé αñòαÑìαñ▓αÑïαñ░αÑïαñ½αñ┐αñ▓ αñ¿αñ╛αñ«αñò αñÅαñò αñ╣αñ░αñ╛ αñ╡αñ░αÑìαñúαñò αñ╣αÑïαññαñ╛ αñ╣αÑê, αñ£αÑï αñ╕αÑéαñ░αÑìαñ» αñòαÑç αñ¬αÑìαñ░αñòαñ╛αñ╢ αñòαÑï αñàαñ╡αñ╢αÑïαñ╖αñ┐αññ αñòαñ░αññαñ╛ αñ╣αÑêαÑñ αñ¬αññαÑìαññαñ┐αñ»αÑïαñé αñ«αÑçαñé αñ░αñéαñºαÑìαñ░ αñ¿αñ╛αñ«αñò αñ¢αÑïαñƒαÑç αñ¢αñ┐αñªαÑìαñ░ αñ¡αÑÇ αñ╣αÑïαññαÑç αñ╣αÑêαñé αñ£αñ┐αñ¿αñòαÑç αñ«αñ╛αñºαÑìαñ»αñ« αñ╕αÑç αñòαñ╛αñ░αÑìαñ¼αñ¿ αñíαñ╛αñçαñæαñòαÑìαñ╕αñ╛αñçαñí αñ¬αÑîαñºαÑç αñ«αÑçαñé αñ¬αÑìαñ░αñ╡αÑçαñ╢ αñòαñ░αññαÑÇ αñ╣αÑêαÑñ" },
-        { type: "cartoon_video", topic: "αñ¬αÑîαñºαÑç αñ«αÑçαñé αñ¬αñ╛αñ¿αÑÇ αñòαÑÇ αñ»αñ╛αññαÑìαñ░αñ╛", video: plantVideo, thumbnail: "https://placehold.co/640x480/2E7D52/FFFFFF?text=≡ƒÄ¿+Visual+Story+Γû╢", languages: ["English", "Hindi", "Sanskrit"] },
-        { type: "text", content: "αñ¬αÑîαñºαÑïαñé αñòαÑï αñ╕αÑìαñ╡αñ¬αÑïαñ╖αÑÇ αñòαñ╣αñ╛ αñ£αñ╛αññαñ╛ αñ╣αÑê αñòαÑìαñ»αÑïαñéαñòαñ┐ αñ╡αÑç αñàαñ¬αñ¿αñ╛ αñ¡αÑïαñ£αñ¿ αñ╕αÑìαñ╡αñ»αñé αñ¼αñ¿αñ╛αññαÑç αñ╣αÑêαñéαÑñ αñ£αñ╛αñ¿αñ╡αñ░αÑïαñé αñöαñ░ αñ«αñ¿αÑüαñ╖αÑìαñ»αÑïαñé αñòαÑï αñ╡αñ┐αñ╖αñ«αñ¬αÑïαñ╖αÑÇ αñòαñ╣αñ╛ αñ£αñ╛αññαñ╛ αñ╣αÑê αñòαÑìαñ»αÑïαñéαñòαñ┐ αñ╡αÑç αñ¡αÑïαñ£αñ¿ αñòαÑç αñ▓αñ┐αñÅ αñ¬αÑîαñºαÑïαñé αñ»αñ╛ αñàαñ¿αÑìαñ» αñ£αñ╛αñ¿αñ╡αñ░αÑïαñé αñ¬αñ░ αñ¿αñ┐αñ░αÑìαñ¡αñ░ αñ╣αÑïαññαÑç αñ╣αÑêαñéαÑñ" }
+        { type: "text", content: "सभी सजीवों को भोजन की आवश्यकता होती है। पौधे ही एकमात्र ऐसे जीव हैं जो अपना भोजन स्वयं बना सकते हैं। वे ऐसा प्रकाश संश्लेषण नामक प्रक्रिया के माध्यम से करते हैं। इस प्रक्रिया में, पौधे सूर्य के प्रकाश, पानी और कार्बन डाइऑक्साइड का उपयोग करके ग्लूकोज बनाते हैं — जो उनकी ऊर्जा का प्राथमिक स्रोत है।" },
+        { type: "avatar_video", topic: "पौधे अपना भोजन कैसे बनाते हैं", video: leafVideo, thumbnail: "https://placehold.co/640x360/F5A623/FFFFFF?text=AI+Teacher+▶", languages: ["English", "Hindi", "Sanskrit"] },
+        { type: "text", content: "प्रकाश संश्लेषण मुख्य रूप से पौधों की पत्तियों में होता है। पत्तियों में क्लोरोफिल नामक एक हरा वर्णक होता है, जो सूर्य के प्रकाश को अवशोषित करता है। पत्तियों में रंध्र नामक छोटे छिद्र भी होते हैं जिनके माध्यम से कार्बन डाइऑक्साइड पौधे में प्रवेश करती है।" },
+        { type: "cartoon_video", topic: "पौधे में पानी की यात्रा", video: plantVideo, thumbnail: "https://placehold.co/640x480/2E7D52/FFFFFF?text=🎨+Visual+Story+▶", languages: ["English", "Hindi", "Sanskrit"] },
+        { type: "text", content: "पौधों को स्वपोषी कहा जाता है क्योंकि वे अपना भोजन स्वयं बनाते हैं। जानवरों और मनुष्यों को विषमपोषी कहा जाता है क्योंकि वे भोजन के लिए पौधों या अन्य जानवरों पर निर्भर होते हैं।" }
       ]
     };
   }
@@ -98,25 +98,25 @@ const getData = (lang) => {
   if (lang === 'Sanskrit') {
     return {
       SUBJECTS: [
-        { id: "maths", title: 'αñùαñúαñ┐αññαñ«αÑì', desc: 'αñòαñ▓αñ¿αñ«αÑì αññαÑìαñ░αñ┐αñòαÑïαñúαñ«αñ┐αññαñ┐αñâ αñÜ', icon: '≡ƒº«', iconBg: 'bg-orange-100', iconColor: 'text-orange-500', progress: 85, modules: 12 },
-        { id: "science", title: 'αñ╡αñ┐αñ£αÑìαñ₧αñ╛αñ¿αñ«αÑì', desc: 'αñ╕αÑçαñéαñªαÑìαñ░αñ┐αñ» αñ░αñ╕αñ╛αñ»αñ¿αñé αñòαñúαñ¡αÑîαññαñ┐αñòαÑÇ αñÜ', icon: '≡ƒö¼', iconBg: 'bg-green-100', iconColor: 'text-green-500', progress: 64, modules: 9 },
-        { id: "social", title: 'αñ╕αñ«αñ╛αñ£αñ╡αñ┐αñ£αÑìαñ₧αñ╛αñ¿αñ«αÑì', desc: 'αñåαñºαÑüαñ¿αñ┐αñò αñ¡αñ╛αñ░αññαÑÇαñ» αñçαññαñ┐αñ╣αñ╛αñ╕αñâ αñ¿αñ╛αñùαñ░αñ┐αñòαñ╢αñ╛αñ╕αÑìαññαÑìαñ░αñé αñÜ', icon: '≡ƒîÄ', iconBg: 'bg-blue-100', iconColor: 'text-blue-500', progress: 42, modules: 5 },
-        { id: "english", title: 'αñåαñéαñùαÑìαñ▓αñ¡αñ╛αñ╖αñ╛', desc: 'αñòαñ╛αñ╡αÑìαñ»αñé, αñàαñ▓αñÖαÑìαñòαñ╛αñ░αñâ αñëαñ¿αÑìαñ¿αññαñ╡αÑìαñ»αñ╛αñòαñ░αñúαñé αñÜ', icon: '≡ƒôû', iconBg: 'bg-purple-100', iconColor: 'text-purple-500', progress: 91, modules: 18 },
-        { id: "hindi", title: 'αñ╣αñ┐αñ¿αÑìαñªαÑÇ', desc: 'αñ╕αñ╛αñ╣αñ┐αññαÑìαñ»αñé αñ░αñÜαñ¿αñ╛αññαÑìαñ«αñòαñé αñ▓αÑçαñûαñ¿αñé αñÜ', icon: 'αñà', iconBg: 'bg-pink-100', iconColor: 'text-pink-500', progress: 78, modules: 11 }
+        { id: "maths", title: 'गणितम्', desc: 'कलनम् त्रिकोणमितिः च', icon: '🧮', iconBg: 'bg-orange-100', iconColor: 'text-orange-500', progress: 85, modules: 12 },
+        { id: "science", title: 'विज्ञानम्', desc: 'सेंद्रिय रसायनं कणभौतिकी च', icon: '🔬', iconBg: 'bg-green-100', iconColor: 'text-green-500', progress: 64, modules: 9 },
+        { id: "social", title: 'समाजविज्ञानम्', desc: 'आधुनिक भारतीय इतिहासः नागरिकशास्त्रं च', icon: '🌎', iconBg: 'bg-blue-100', iconColor: 'text-blue-500', progress: 42, modules: 5 },
+        { id: "english", title: 'आंग्लभाषा', desc: 'काव्यं, अलङ्कारः उन्नतव्याकरणं च', icon: '📖', iconBg: 'bg-purple-100', iconColor: 'text-purple-500', progress: 91, modules: 18 },
+        { id: "hindi", title: 'हिन्दी', desc: 'साहित्यं रचनात्मकं लेखनं च', icon: 'अ', iconBg: 'bg-pink-100', iconColor: 'text-pink-500', progress: 78, modules: 11 }
       ],
       SCIENCE_CHAPTERS: [
-        { id: 1, title: "αñ¬αñ╛αñªαñ¬αÑçαñ╖αÑü αñ¬αÑïαñ╖αñúαñ«αÑì", topics: 6, done: true },
-        { id: 2, title: "αñ£αñ¿αÑìαññαÑüαñ╖αÑü αñ¬αÑïαñ╖αñúαñ«αÑì", topics: 5, done: true },
-        { id: 3, title: "αññαñ¿αÑìαññαÑüαññαñâ αñ╡αñ╕αÑìαññαÑìαñ░αñ¬αñ░αÑìαñ»αñ¿αÑìαññαñ«αÑì", topics: 4, done: false },
-        { id: 4, title: "αñèαñ╖αÑìαñ«αñ╛", topics: 7, done: false },
-        { id: 5, title: "αñàαñ«αÑìαñ▓αñâ, αñòαÑìαñ╖αñ╛αñ░αñâ αñ▓αñ╡αñúαñ╛αñ¿αñ┐ αñÜ", topics: 6, done: false }
+        { id: 1, title: "पादपेषु पोषणम्", topics: 6, done: true },
+        { id: 2, title: "जन्तुषु पोषणम्", topics: 5, done: true },
+        { id: 3, title: "तन्तुतः वस्त्रपर्यन्तम्", topics: 4, done: false },
+        { id: 4, title: "ऊष्मा", topics: 7, done: false },
+        { id: 5, title: "अम्लः, क्षारः लवणानि च", topics: 6, done: false }
       ],
       CHAPTER_1_CONTENT: [
-        { type: "text", content: "αñ╕αñ░αÑìαñ╡αÑçαñ¡αÑìαñ»αñâ αñ£αÑÇαñ╡αÑçαñ¡αÑìαñ»αñâ αñåαñ╣αñ╛αñ░αñ╕αÑìαñ» αñåαñ╡αñ╢αÑìαñ»αñòαññαñ╛ αñ¡αñ╡αññαñ┐αÑñ αñ¬αñ╛αñªαñ¬αñ╛αñâ αñÅαñ╡ αñ╕αÑìαñ╡αñ¡αÑïαñ£αñ¿αñé αñ╕αÑìαñ╡αñ»αñé αñ¿αñ┐αñ░αÑìαñ«αñ╛αññαÑüαñé αñ╕αñ«αñ░αÑìαñÑαñ╛αñâ αñ╕αñ¿αÑìαññαñ┐αÑñ αññαÑç αñ¬αÑìαñ░αñòαñ╛αñ╢αñ╕αñéαñ╢αÑìαñ▓αÑçαñ╖αñú-αñ¬αÑìαñ░αñòαÑìαñ░αñ┐αñ»αñ╛αñªαÑìαñ╡αñ╛αñ░αñ╛ αñÅαññαññαÑì αñòαÑüαñ░αÑìαñ╡αñ¿αÑìαññαñ┐αÑñ αñàαññαÑìαñ░ αñ¬αñ╛αñªαñ¬αñ╛αñâ αñ╕αÑéαñ░αÑìαñ»αñ╛αññαñ¬αñ╕αÑìαñ», αñ£αñ▓αñ╕αÑìαñ», α▓àαñÖαÑìαñùαñ╛αñ░αñªαÑìαñ╡αñ┐αñ¬αÑìαñ░αñ£αñ╛αñ░αñòαñ╕αÑìαñ» (Carbon dioxide) αñÜ αñ╕αñ╛αñ╣αñ╛αñ»αÑìαñ»αÑçαñ¿ αñ╕αÑìαñ╡αñ╕αÑìαñ» αñ«αÑüαñûαÑìαñ»αÑïαñ░αÑìαñ£αñ╛αñ«αÑì 'αñùαÑìαñ▓αÑéαñòαÑïαñ£' αñ¿αñ┐αñ░αÑìαñ«αñ╛αñ¿αÑìαññαñ┐αÑñ" },
-        { type: "avatar_video", topic: "αñ¬αñ╛αñªαñ¬αñ╛αñâ αñòαñÑαñé αñ╕αÑìαñ╡αñ¡αÑïαñ£αñ¿αñé αñòαÑüαñ░αÑìαñ╡αñ¿αÑìαññαñ┐", video: leafVideo, thumbnail: "https://placehold.co/640x360/F5A623/FFFFFF?text=AI+Teacher+Γû╢", languages: ["English", "Hindi", "Sanskrit"] },
-        { type: "text", content: "αñ¬αÑìαñ░αñòαñ╛αñ╢αñ╕αñéαñ╢αÑìαñ▓αÑçαñ╖αñúαñé αñ«αÑüαñûαÑìαñ»αññαñ»αñ╛ αñ¬αñ╛αñªαñ¬αñ╛αñ¿αñ╛αñé αñ¬αñ░αÑìαñúαÑçαñ╖αÑü αñ¡αñ╡αññαñ┐αÑñ αñ¬αñ░αÑìαñúαÑçαñ╖αÑü 'αñ╣αñ░αñ┐αññαñòαÑÇ' (Chlorophyll) αñçαññαñ┐ αñ╣αñ░αñ┐αññαñ╡αñ░αÑìαñúαñòαñâ αñ¡αñ╡αññαñ┐, αñ»αñâ αñ╕αÑéαñ░αÑìαñ»αñ╛αññαñ¬αñé αñùαÑâαñ╣αÑìαñúαñ╛αññαñ┐αÑñ αñ¬αñ░αÑìαñúαÑçαñ╖αÑü αñ╕αÑéαñòαÑìαñ╖αÑìαñ«αñ╛αñúαñ┐ αñ¢αñ┐αñªαÑìαñ░αñ╛αñúαñ┐ αñàαñ¬αñ┐ αñ╕αñ¿αÑìαññαñ┐, αñ»αÑêαñâ αñàαñÖαÑìαñùαñ╛αñ░αñªαÑìαñ╡αñ┐αñ¬αÑìαñ░αñ£αñ╛αñ░αñòαñâ αñ¬αñ╛αñªαñ¬αñ╕αÑìαñ» αñàαñ¿αÑìαññαñâ αñ¬αÑìαñ░αñ╡αñ┐αñ╢αññαñ┐αÑñ" },
-        { type: "cartoon_video", topic: "αñ¬αñ╛αñªαñ¬αÑç αñ£αñ▓αñ╕αÑìαñ» αñ»αñ╛αññαÑìαñ░αñ╛", video: plantVideo, thumbnail: "https://placehold.co/640x480/2E7D52/FFFFFF?text=≡ƒÄ¿+Visual+Story+Γû╢", languages: ["English", "Hindi", "Sanskrit"] },
-        { type: "text", content: "αñ¬αñ╛αñªαñ¬αñ╛αñâ 'αñ╕αÑìαñ╡αñ¬αÑïαñ╖αñ┐αñúαñâ' αñçαññαñ┐ αñòαñÑαÑìαñ»αñ¿αÑìαññαÑç αñ»αññαÑïαñ╣αñ┐ αññαÑç αñ╕αÑìαñ╡αñ¡αÑïαñ£αñ¿αñé αñ╕αÑìαñ╡αñ»αñé αñ¿αñ┐αñ░αÑìαñ«αñ╛αñ¿αÑìαññαñ┐αÑñ αñ¬αñ╢αñ╡αñâ αñ«αñ╛αñ¿αñ╡αñ╛αñâ αñÜ 'αñ¬αñ░αñ¬αÑïαñ╖αñ┐αñúαñâ' αñçαññαñ┐ αñòαñÑαÑìαñ»αñ¿αÑìαññαÑç αñ»αññαÑïαñ╣αñ┐ αññαÑç αñåαñ╣αñ╛αñ░αñ╛αñ» αñàαñ¿αÑìαñ»αÑçαñ╖αÑü αñ¬αñ╛αñªαñ¬αÑçαñ╖αÑü αñ£αñéαññαÑüαñ╖αÑü αñ╡αñ╛ αñåαñ╢αÑìαñ░αñ┐αññαñ╛αñâ αñ¡αñ╡αñ¿αÑìαññαñ┐αÑñ" }
+        { type: "text", content: "सर्वेभ्यः जीवेभ्यः आहारस्य आवश्यकता भवति। पादपाः एव स्वभोजनं स्वयं निर्मातुं समर्थाः सन्ति। ते प्रकाशसंश्लेषण-प्रक्रियाद्वारा एतत् कुर्वन्ति। अत्र पादपाः सूर्यातपस्य, जलस्य, ಅङ्गारद्विप्रजारकस्य (Carbon dioxide) च साहाय्येन स्वस्य मुख्योर्जाम् 'ग्लूकोज' निर्मान्ति।" },
+        { type: "avatar_video", topic: "पादपाः कथं स्वभोजनं कुर्वन्ति", video: leafVideo, thumbnail: "https://placehold.co/640x360/F5A623/FFFFFF?text=AI+Teacher+▶", languages: ["English", "Hindi", "Sanskrit"] },
+        { type: "text", content: "प्रकाशसंश्लेषणं मुख्यतया पादपानां पर्णेषु भवति। पर्णेषु 'हरितकी' (Chlorophyll) इति हरितवर्णकः भवति, यः सूर्यातपं गृह्णाति। पर्णेषु सूक्ष्माणि छिद्राणि अपि सन्ति, यैः अङ्गारद्विप्रजारकः पादपस्य अन्तः प्रविशति।" },
+        { type: "cartoon_video", topic: "पादपे जलस्य यात्रा", video: plantVideo, thumbnail: "https://placehold.co/640x480/2E7D52/FFFFFF?text=🎨+Visual+Story+▶", languages: ["English", "Hindi", "Sanskrit"] },
+        { type: "text", content: "पादपाः 'स्वपोषिणः' इति कथ्यन्ते यतोहि ते स्वभोजनं स्वयं निर्मान्ति। पशवः मानवाः च 'परपोषिणः' इति कथ्यन्ते यतोहि ते आहाराय अन्येषु पादपेषु जंतुषु वा आश्रिताः भवन्ति।" }
       ]
     };
   }
@@ -124,11 +124,11 @@ const getData = (lang) => {
   // Fallback to English
   return {
     SUBJECTS: [
-      { id: "maths", title: 'Mathematics', desc: 'Calculus & Trigonometry Fundamentals', icon: '≡ƒº«', iconBg: 'bg-orange-100', iconColor: 'text-orange-500', progress: 85, modules: 12 },
-      { id: "science", title: 'Science', desc: 'Organic Chemistry & Particle Physics', icon: '≡ƒö¼', iconBg: 'bg-green-100', iconColor: 'text-green-500', progress: 64, modules: 9 },
-      { id: "social", title: 'Social Studies', desc: 'Modern Indian History & Civics', icon: '≡ƒîÄ', iconBg: 'bg-blue-100', iconColor: 'text-blue-500', progress: 42, modules: 5 },
-      { id: "english", title: 'English', desc: 'Poetry, Rhetoric & Advanced Grammar', icon: '≡ƒôû', iconBg: 'bg-purple-100', iconColor: 'text-purple-500', progress: 91, modules: 18 },
-      { id: "hindi", title: 'Hindi', desc: 'Literature & Creative Writing', icon: 'αñà', iconBg: 'bg-pink-100', iconColor: 'text-pink-500', progress: 78, modules: 11 }
+      { id: "maths", title: 'Mathematics', desc: 'Calculus & Trigonometry Fundamentals', icon: '🧮', iconBg: 'bg-orange-100', iconColor: 'text-orange-500', progress: 85, modules: 12 },
+      { id: "science", title: 'Science', desc: 'Organic Chemistry & Particle Physics', icon: '🔬', iconBg: 'bg-green-100', iconColor: 'text-green-500', progress: 64, modules: 9 },
+      { id: "social", title: 'Social Studies', desc: 'Modern Indian History & Civics', icon: '🌎', iconBg: 'bg-blue-100', iconColor: 'text-blue-500', progress: 42, modules: 5 },
+      { id: "english", title: 'English', desc: 'Poetry, Rhetoric & Advanced Grammar', icon: '📖', iconBg: 'bg-purple-100', iconColor: 'text-purple-500', progress: 91, modules: 18 },
+      { id: "hindi", title: 'Hindi', desc: 'Literature & Creative Writing', icon: 'अ', iconBg: 'bg-pink-100', iconColor: 'text-pink-500', progress: 78, modules: 11 }
     ],
     SCIENCE_CHAPTERS: [
       { id: 1, title: "Nutrition in Plants", topics: 6, done: true },
@@ -138,10 +138,10 @@ const getData = (lang) => {
       { id: 5, title: "Acids, Bases and Salts", topics: 6, done: false }
     ],
     CHAPTER_1_CONTENT: [
-      { type: "text", content: "All living organisms require food. Plants are the only organisms that can prepare their own food. They do this through a process called photosynthesis. In this process, plants use sunlight, water, and carbon dioxide to make glucose ΓÇö their primary source of energy." },
-      { type: "avatar_video", topic: "How Plants Make Food", video: leafVideo, thumbnail: "https://placehold.co/640x360/F5A623/FFFFFF?text=AI+Teacher+Γû╢", languages: ["English", "Hindi", "Sanskrit"] },
+      { type: "text", content: "All living organisms require food. Plants are the only organisms that can prepare their own food. They do this through a process called photosynthesis. In this process, plants use sunlight, water, and carbon dioxide to make glucose — their primary source of energy." },
+      { type: "avatar_video", topic: "How Plants Make Food", video: leafVideo, thumbnail: "https://placehold.co/640x360/F5A623/FFFFFF?text=AI+Teacher+▶", languages: ["English", "Hindi", "Sanskrit"] },
       { type: "text", content: "Photosynthesis takes place mainly in the leaves of plants. Leaves have a green pigment called chlorophyll, which absorbs sunlight. The leaves also have tiny pores called stomata through which carbon dioxide enters the plant." },
-      { type: "cartoon_video", topic: "Journey of Water in a Plant", video: plantVideo, thumbnail: "https://placehold.co/640x480/2E7D52/FFFFFF?text=≡ƒÄ¿+Visual+Story+Γû╢", languages: ["English", "Hindi", "Sanskrit"] },
+      { type: "cartoon_video", topic: "Journey of Water in a Plant", video: plantVideo, thumbnail: "https://placehold.co/640x480/2E7D52/FFFFFF?text=🎨+Visual+Story+▶", languages: ["English", "Hindi", "Sanskrit"] },
       { type: "text", content: "Plants are called autotrophs because they produce their own food. Animals and humans are called heterotrophs because they depend on plants or other animals for food." }
     ]
   };
@@ -172,7 +172,8 @@ export default function App() {
           onSelectSubject={(subj) => {
             setActiveSubject(subj);
             navigateTo('chapterList');
-          }} 
+          }}
+          onNavigate={navigateTo}
         />
       )}
 
@@ -187,7 +188,6 @@ export default function App() {
             setActiveChapter(chap);
             navigateTo('reader');
           }}
-          onNavigate={navigateTo}
         />
       )}
 
@@ -206,15 +206,6 @@ export default function App() {
           profile={profile}
           setProfile={setProfile}
           onBack={() => navigateTo('chapterList')}
-          onNavigate={navigateTo}
-        />
-      )}
-
-      {view === 'aiteacher' && (
-        <AITeacherView 
-          profile={profile}
-          onBack={() => navigateTo('dashboard')}
-          onNavigate={navigateTo}
         />
       )}
     </div>
@@ -561,11 +552,17 @@ function Sidebar({ activeView, onNavigate, profile }) {
       </div>
 
       <div className="flex-1 py-4">
-        <NavItem icon={<LayoutDashboard className="w-5 h-5" />} label="Dashboard" active={activeView === 'dashboard'} onClick={() => onNavigate('dashboard')} />
-        <NavItem icon={<BookOpen className="w-5 h-5" />} label="My Learning" active={activeView === 'learning'} onClick={() => onNavigate('dashboard')} />
-        <NavItem icon={<FileText className="w-5 h-5" />} label="Assignments" />
-        <NavItem icon={<Library className="w-5 h-5" />} label="Library" />
-        <NavItem icon={<Settings className="w-5 h-5" />} label="Settings" />
+        <NavItem icon={<LayoutDashboard className="w-5 h-5" />} label={t.dashboard} active={activeView === 'dashboard'} onClick={() => onNavigate('dashboard')} />
+        <NavItem
+          icon={<Monitor className="w-5 h-5" />}
+          label={t.aiTeacher}
+          active={activeView === 'aiteacher'}
+          onClick={() => onNavigate('aiteacher')}
+        />
+        <NavItem icon={<BookOpen className="w-5 h-5" />} label={t.myLearning} active={activeView === 'learning'} onClick={() => onNavigate('dashboard')} />
+        <NavItem icon={<FileText className="w-5 h-5" />} label={t.assignments} />
+        <NavItem icon={<Library className="w-5 h-5" />} label={t.library} />
+        <NavItem icon={<Settings className="w-5 h-5" />} label={t.settings} />
       </div>
 
       <div className="p-6">
@@ -592,15 +589,17 @@ function NavItem({ icon, label, active, onClick }) {
   );
 }
 
-function DashboardView({ profile, onSelectSubject }) {
-  const name = profile.name || 'Arjun';
+function DashboardView({ profile, setProfile, onSelectSubject, onNavigate }) {
+  const name = profile.name || (profile?.language === 'Hindi' ? 'अर्जुन' : profile?.language === 'Sanskrit' ? 'अर्जुनः' : 'Arjun');
+  const language = profile?.language || 'English';
+  const t = TRANSLATIONS[language] || TRANSLATIONS['English'];
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FAFAF8]">
       <TopNav profile={profile} setProfile={setProfile} />
       <div className="flex flex-1">
-        <Sidebar activeView="dashboard" onNavigate={() => {}} />
-        
+        <Sidebar activeView="dashboard" onNavigate={onNavigate} profile={profile} />
+
         <div className="flex-1 overflow-y-auto p-8 relative">
           <div className="bg-white rounded-2xl border border-gray-100 p-8 shadow-sm flex flex-col md:flex-row items-center justify-between mb-10">
             <div className="max-w-xl">
@@ -673,7 +672,10 @@ function DashboardView({ profile, onSelectSubject }) {
   );
 }
 
-function ChapterListView({ subject, profile, onSelectChapter, onBack }) {
+function ChapterListView({ subject, profile, setProfile, onSelectChapter, onBack, onNavigate }) {
+  const { SCIENCE_CHAPTERS, SUBJECTS } = getData(profile?.language);
+  const localizedSubject = SUBJECTS.find(s => s.id === subject.id) || subject;
+
   const chapters = subject.id === 'science' ? SCIENCE_CHAPTERS : [];
   const [activeId, setActiveId] = useState(1);
   const activeChapter = chapters.find(c => c.id === activeId);
@@ -685,8 +687,8 @@ function ChapterListView({ subject, profile, onSelectChapter, onBack }) {
     <div className="min-h-screen flex flex-col bg-[#FAFAF8]">
       <TopNav profile={profile} setProfile={setProfile} />
       <div className="flex flex-1 overflow-hidden">
-        <Sidebar activeView="learning" onNavigate={onBack} />
-        
+        <Sidebar activeView="learning" onNavigate={onNavigate} profile={profile} />
+
         <div className="flex-1 flex overflow-hidden">
           <div className="w-80 border-r border-gray-100 bg-white flex flex-col h-[calc(100vh-77px)] shrink-0 overflow-y-auto">
             <div className="p-6 border-b border-gray-100">
@@ -764,7 +766,7 @@ function ChapterListView({ subject, profile, onSelectChapter, onBack }) {
   );
 }
 
-function ReaderView({ subject, chapter, profile, onBack }) {
+function ReaderView({ subject, chapter, profile, setProfile, onBack }) {
   const [completed, setCompleted] = useState(false);
 
   const language = profile?.language || 'English';
@@ -882,7 +884,7 @@ function AITeacherView({ profile, setProfile, onNavigate }) {
         <Sidebar activeView="aiteacher" onNavigate={onNavigate} profile={profile} />
         <div className="flex-1 flex flex-col w-full h-full overflow-hidden relative bg-[#1e1e2e]">
           <div className="absolute inset-0" style={{ top: '-80px', bottom: '-80px' }}>
-            <iframe 
+            <iframe
               src="https://studio.d-id.com/agents/share?id=v2_agt_DcgBxOYo&utm_source=copy&key=Y2tfZHYyNkduU3hYdGw1RFhZckd2Ykhx"
               style={{ width: '100%', height: 'calc(100% + 160px)', border: 'none' }}
               allow="camera; microphone; display-capture; autoplay"
@@ -894,4 +896,3 @@ function AITeacherView({ profile, setProfile, onNavigate }) {
     </div>
   );
 }
-
