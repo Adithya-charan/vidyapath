@@ -733,7 +733,7 @@ function AITeacherView({ profile, onBack }) {
   const [doubt, setDoubt] = useState("");
   const [doubtAnswer, setDoubtAnswer] = useState(null);
   const [doubtLoading, setDoubtLoading] = useState(false);
-  const [interactiveMode, setInteractiveMode] = useState(false);
+  const [interactiveMode, setInteractiveMode] = useState(true);
 
   const generateVideo = async (difficulty = "standard") => {
     if (!subject || !topic) return alert("Please select a subject and topic");
@@ -800,24 +800,23 @@ function AITeacherView({ profile, onBack }) {
             </div>
 
             {interactiveMode ? (
-              <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 mb-8 h-[600px] flex flex-col">
-                <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-4 flex items-start gap-4">
-                  <div className="bg-blue-100 p-3 rounded-full shrink-0">
-                    <Monitor className="w-6 h-6 text-blue-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-blue-900">Live D-ID Teacher</h3>
-                    <p className="text-sm text-blue-800 mt-1">
-                      You are now connected to the real-time AI Agent. Click "Start" on the video player below to begin a live voice conversation!
-                    </p>
-                  </div>
+              <div className="bg-white rounded-2xl p-12 shadow-sm border border-gray-100 mb-8 flex flex-col items-center justify-center text-center">
+                <div className="bg-blue-100 p-6 rounded-full mb-6 relative">
+                  <Monitor className="w-12 h-12 text-blue-600" />
+                  <div className="absolute top-4 right-4 w-4 h-4 bg-green-500 border-4 border-blue-100 rounded-full animate-pulse"></div>
                 </div>
-                <iframe 
-                  src="https://studio.d-id.com/agents/share?id=v2_agt_6H2TaOEB&utm_source=copy&key=Y2tfaEoyWTVVYnk0YWNraXUteF9IcENZ" 
-                  className="w-full flex-1 rounded-xl border-none"
-                  allow="camera; microphone"
-                  title="D-ID AI Agent"
-                ></iframe>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">Live D-ID Teacher</h2>
+                <p className="text-gray-600 mb-8 max-w-md">
+                  Because of browser security, the live interactive agent must open in a secure window. Click the button below to start your real-time voice conversation!
+                </p>
+                <a 
+                  href="https://studio.d-id.com/agents/share?id=v2_agt_6H2TaOEB&utm_source=copy&key=Y2tfaEoyWTVVYnk0YWNraXUteF9IcENZ" 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center gap-3 text-lg"
+                >
+                  <Video className="w-6 h-6" /> Launch Live Teacher
+                </a>
               </div>
             ) : (
               <>
