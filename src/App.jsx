@@ -6,30 +6,146 @@ import confetti from 'canvas-confetti';
 import leafVideo from './assets/Leaf_And_Sun_Animation_Generation.mp4';
 import plantVideo from './assets/Animated_Happy_Potted_Plant_Video.mp4';
 
+
+const TRANSLATIONS = {
+  English: {
+    courses: "Courses", library: "Library", mentors: "Mentors",
+    newYear: "NEW ACADEMIC YEAR 2024",
+    titleLines: ["Where", "Tradition", "Meets Digital", "Excellence"],
+    subtitle: "Bridge the gap between timeless academic wisdom and the modern digital landscape. A focused sanctuary for scholars, learners, and dreamers.",
+    getStarted: "Get Started", exploreCourses: "Explore Courses", trusted: "TRUSTED BY 20K+ STUDENTS",
+    welcomeBack: "Welcome back", masteredConcepts: "You've mastered 3 new concepts in",
+    keepPace: "this week. Keep up the scholarly pace!", dailyGoal: "Daily Goal: 80% Complete",
+    weekly: "Weekly", yourSubjects: "Your Subjects", viewCurriculum: "View curriculum",
+    mastery: "Mastery", modulesCompleted: "Modules Completed", enrollNewSubject: "Enroll in New Subject",
+    backHome: "Back to Home", createProfile: "Create Your Profile", joinCommunity: "Join the community of lifelong learners.",
+    fullName: "Full Name", enterName: "Enter your full name", className: "Class", selectClass: "Select Class",
+    board: "Board", selectBoard: "Select Board", preferredLanguage: "Preferred Language", beginLearning: "Begin Learning",
+    studentPortal: "Student Portal", dashboard: "Dashboard", myLearning: "My Learning", assignments: "Assignments",
+    settings: "Settings", startStudying: "Start Studying", back: "Back", topics: "Topics",
+    generatingCurriculum: "Curriculum generating...", chapterText: "Chapter", startReading: "Start Reading",
+    backCurriculum: "Back to Curriculum", markComplete: "Mark Chapter as Complete", chapterComplete: "Chapter Complete! Excellent work.",
+    minRead: "min read", aiTeacher: "AI Teacher"
+  },
+  Hindi: {
+    courses: "αñ¬αñ╛αñáαÑìαñ»αñòαÑìαñ░αñ«", library: "αñ¬αÑüαñ╕αÑìαññαñòαñ╛αñ▓αñ»", mentors: "αñ«αñ╛αñ░αÑìαñùαñªαñ░αÑìαñ╢αñò",
+    newYear: "αñ¿αñ»αñ╛ αñ╢αÑêαñòαÑìαñ╖αñúαñ┐αñò αñ╡αñ░αÑìαñ╖ 2024",
+    titleLines: ["αñ£αñ╣αñ╛αñü", "αñ¬αñ░αñéαñ¬αñ░αñ╛", "αñåαñºαÑüαñ¿αñ┐αñò", "αñëαññαÑìαñòαÑâαñ╖αÑìαñƒαññαñ╛ αñ╕αÑç αñ«αñ┐αñ▓αññαÑÇ αñ╣αÑê"],
+    subtitle: "αñòαñ╛αñ▓αñ╛αññαÑÇαññ αñ╢αÑêαñòαÑìαñ╖αñúαñ┐αñò αñ£αÑìαñ₧αñ╛αñ¿ αñöαñ░ αñåαñºαÑüαñ¿αñ┐αñò αñíαñ┐αñ£αñ┐αñƒαñ▓ αñ¬αñ░αñ┐αñªαÑâαñ╢αÑìαñ» αñòαÑç αñ¼αÑÇαñÜ αñòαÑÇ αñûαñ╛αñê αñòαÑï αñ¬αñ╛αñƒαÑçαñéαÑñ αñ╡αñ┐αñªαÑìαñ╡αñ╛αñ¿αÑïαñé αñöαñ░ αñ╕αÑÇαñûαñ¿αÑç αñ╡αñ╛αñ▓αÑïαñé αñòαÑç αñ▓αñ┐αñÅ αñÅαñò αñòαÑçαñéαñªαÑìαñ░αñ┐αññ αñàαñ¡αñ»αñ╛αñ░αñúαÑìαñ»αÑñ",
+    getStarted: "αñ╢αÑüαñ░αÑé αñòαñ░αÑçαñé", exploreCourses: "αñ¬αñ╛αñáαÑìαñ»αñòαÑìαñ░αñ« αñûαÑïαñ£αÑçαñé", trusted: "αÑ¿αÑª αñ╣αñ£αñ╛αñ░+ αñ¢αñ╛αññαÑìαñ░αÑïαñé αñªαÑìαñ╡αñ╛αñ░αñ╛ αñ╡αñ┐αñ╢αÑìαñ╡αñ╕αñ¿αÑÇαñ»",
+    welcomeBack: "αñ╕αÑìαñ╡αñ╛αñùαññ αñ╣αÑê", masteredConcepts: "αñåαñ¬αñ¿αÑç αÑ⌐ αñ¿αñê αñàαñ╡αñºαñ╛αñ░αñúαñ╛αñôαñé αñ«αÑçαñé αñ«αñ╣αñ╛αñ░αññ αñ╣αñ╛αñ╕αñ┐αñ▓ αñòαÑÇ αñ╣αÑê:",
+    keepPace: "αñçαñ╕ αñ╕αñ¬αÑìαññαñ╛αñ╣αÑñ αñ╡αñ┐αñªαÑìαñ╡αññαÑìαññαñ╛αñ¬αÑéαñ░αÑìαñú αñùαññαñ┐ αñ¼αñ¿αñ╛αñÅ αñ░αñûαÑçαñé!", dailyGoal: "αñªαÑêαñ¿αñ┐αñò αñ▓αñòαÑìαñ╖αÑìαñ»: 80% αñ¬αÑéαñ░αÑìαñú",
+    weekly: "αñ╕αñ╛αñ¬αÑìαññαñ╛αñ╣αñ┐αñò", yourSubjects: "αñåαñ¬αñòαÑç αñ╡αñ┐αñ╖αñ»", viewCurriculum: "αñ¬αñ╛αñáαÑìαñ»αñòαÑìαñ░αñ« αñªαÑçαñûαÑçαñé",
+    mastery: "αñ«αñ╣αñ╛αñ░αññ", modulesCompleted: "αñ«αÑëαñíαÑìαñ»αÑéαñ▓ αñ¬αÑéαñ░αÑìαñú", enrollNewSubject: "αñ¿αñÅ αñ╡αñ┐αñ╖αñ» αñ«αÑçαñé αñ¿αñ╛αñ«αñ╛αñéαñòαñ¿ αñòαñ░αÑçαñé",
+    backHome: "αñ╣αÑïαñ« αñ¬αñ░ αñ╡αñ╛αñ¬αñ╕ αñ£αñ╛αñÅαñü", createProfile: "αñàαñ¬αñ¿αÑÇ αñ¬αÑìαñ░αÑïαñ½αñ╝αñ╛αñçαñ▓ αñ¼αñ¿αñ╛αñÅαñü", joinCommunity: "αñåαñ£αÑÇαñ╡αñ¿ αñ╕αÑÇαñûαñ¿αÑç αñ╡αñ╛αñ▓αÑïαñé αñòαÑç αñ╕αñ«αÑüαñªαñ╛αñ» αñ«αÑçαñé αñ╢αñ╛αñ«αñ┐αñ▓ αñ╣αÑïαñéαÑñ",
+    fullName: "αñ¬αÑéαñ░αñ╛ αñ¿αñ╛αñ«", enterName: "αñàαñ¬αñ¿αñ╛ αñ¬αÑéαñ░αñ╛ αñ¿αñ╛αñ« αñªαñ░αÑìαñ£ αñòαñ░αÑçαñé", className: "αñòαñòαÑìαñ╖αñ╛", selectClass: "αñòαñòαÑìαñ╖αñ╛ αñÜαÑüαñ¿αÑçαñé",
+    board: "αñ¼αÑïαñ░αÑìαñí", selectBoard: "αñ¼αÑïαñ░αÑìαñí αñÜαÑüαñ¿αÑçαñé", preferredLanguage: "αñ¬αñ╕αñéαñªαÑÇαñªαñ╛ αñ¡αñ╛αñ╖αñ╛", beginLearning: "αñ╕αÑÇαñûαñ¿αñ╛ αñ╢αÑüαñ░αÑé αñòαñ░αÑçαñé",
+    studentPortal: "αñ¢αñ╛αññαÑìαñ░ αñ¬αÑïαñ░αÑìαñƒαñ▓", dashboard: "αñíαÑêαñ╢αñ¼αÑïαñ░αÑìαñí", myLearning: "αñ«αÑçαñ░αÑÇ αñ╢αñ┐αñòαÑìαñ╖αñ╛", assignments: "αñòαñ╛αñ░αÑìαñ»",
+    settings: "αñ╕αÑçαñƒαñ┐αñéαñùαÑìαñ╕", startStudying: "αñ¬αñóαñ╝αñ╛αñê αñ╢αÑüαñ░αÑé αñòαñ░αÑçαñé", back: "αñ╡αñ╛αñ¬αñ╕", topics: "αñ╡αñ┐αñ╖αñ»",
+    generatingCurriculum: "αñ¬αñ╛αñáαÑìαñ»αñòαÑìαñ░αñ« αñëαññαÑìαñ¬αñ¿αÑìαñ¿ αñ╣αÑï αñ░αñ╣αñ╛ αñ╣αÑê...", chapterText: "αñàαñºαÑìαñ»αñ╛αñ»", startReading: "αñ¬αñóαñ╝αñ¿αñ╛ αñ╢αÑüαñ░αÑé αñòαñ░αÑçαñé",
+    backCurriculum: "αñ¬αñ╛αñáαÑìαñ»αñòαÑìαñ░αñ« αñ¬αñ░ αñ╡αñ╛αñ¬αñ╕ αñ£αñ╛αñÅαñü", markComplete: "αñàαñºαÑìαñ»αñ╛αñ» αñòαÑï αñ¬αÑéαñ░αÑìαñú αñòαÑç αñ░αÑéαñ¬ αñ«αÑçαñé αñÜαñ┐αñ╣αÑìαñ¿αñ┐αññ αñòαñ░αÑçαñé", chapterComplete: "αñàαñºαÑìαñ»αñ╛αñ» αñ¬αÑéαñ░αÑìαñú! αñëαññαÑìαñòαÑâαñ╖αÑìαñƒ αñòαñ╛αñ░αÑìαñ»αÑñ",
+    minRead: "αñ«αñ┐αñ¿αñƒ αñòαÑÇ αñ¬αñóαñ╝αñ╛αñê", aiTeacher: "αñÅαñåαñê αñ╢αñ┐αñòαÑìαñ╖αñò"
+  },
+  Sanskrit: {
+    courses: "αñ¬αñ╛αñáαÑìαñ»αñòαÑìαñ░αñ«αñ╛αñâ", library: "αñùαÑìαñ░αñ¿αÑìαñÑαñ╛αñ▓αñ»αñâ", mentors: "αñùαÑüαñ░αñ╡αñâ",
+    newYear: "αñ¿αÑéαññαñ¿ αñ╢αÑêαñòαÑìαñ╖αñ┐αñò αñ╡αñ░αÑìαñ╖ 2024",
+    titleLines: ["αñ»αññαÑìαñ░", "αñ¬αñ░αñ«αÑìαñ¬αñ░αñ╛", "αñåαñºαÑüαñ¿αñ┐αñò", "αñëαññαÑìαñòαñ░αÑìαñ╖αÑçαñú αñ«αñ┐αñ▓αññαñ┐"],
+    subtitle: "αñ¬αñ░αñ«αÑìαñ¬αñ░αñ╛αñùαññ αñ╡αñ┐αñªαÑìαñ»αñ╛αñ»αñ╛αñâ αñåαñºαÑüαñ¿αñ┐αñò αññαñ¿αÑìαññαÑìαñ░αñ£αÑìαñ₧αñ╛αñ¿αñ╕αÑìαñ» αñÜ αñ╕αÑçαññαÑüαñâαÑñ αñ╡αñ┐αñªαÑüαñ╖αñ╛αñé, αñ╡αñ┐αñªαÑìαñ»αñ╛αñ░αÑìαñÑαñ┐αñ¿αñ╛αñé αñÜ αñòαÑâαññαÑç αñÅαñòαñé αñ«αÑüαñûαÑìαñ»αñé αñ╢αñ░αñúαñ«αÑìαÑñ",
+    getStarted: "αñåαñ░αñ«αÑìαñ¡αñé αñòαÑüαñ░αÑìαñ╡αñ¿αÑìαññαÑü", exploreCourses: "αñ¬αñ╛αñáαÑìαñ»αñòαÑìαñ░αñ«αñ╛αñ¿αÑì αñ¬αñ╢αÑìαñ»αñ¿αÑìαññαÑü", trusted: "αÑ¿αÑª αñ╕αñ╣αñ╕αÑìαñ░αñ╡αñ┐αñªαÑìαñ»αñ╛αñ░αÑìαñÑαñ┐αñ¡αñ┐αñâ αñ╡αñ┐αñ╢αÑìαñ╡αñ╕αñ┐αññαñ«αÑì",
+    welcomeBack: "αñ╕αÑìαñ╡αñ╛αñùαññαñ«αÑì", masteredConcepts: "αñ¡αñ╡αññαñ╛ αÑ⌐ αñ¿αÑéαññαñ¿αñ╛αñâ αñàαñ╡αñºαñ╛αñ░αñúαñ╛αñâ αñàαñºαÑÇαññαñ╛αñâ:",
+    keepPace: "αñàαñ╕αÑìαñ«αñ┐αñ¿αÑì αñ╕αñ¬αÑìαññαñ╛αñ╣αÑçαÑñ αñ╡αñ┐αñªαÑìαñ╡αññαÑìαññαñ╛αñ¬αÑéαñ░αÑìαñúαñé αñ╡αÑçαñùαñé αñºαñ╛αñ░αñ»αññαÑü!", dailyGoal: "αñªαÑêαñ¿αñ┐αñò αñ▓αñòαÑìαñ╖αÑìαñ»αñ«αÑì: 80% αñ¬αÑéαñ░αÑìαñúαñ«αÑì",
+    weekly: "αñ╕αñ╛αñ¬αÑìαññαñ╛αñ╣αñ┐αñòαñ«αÑì", yourSubjects: "αñ¡αñ╡αññαñâ αñ╡αñ┐αñ╖αñ»αñ╛αñâ", viewCurriculum: "αñ¬αñ╛αñáαÑìαñ»αñòαÑìαñ░αñ«αñé αñ¬αñ╢αÑìαñ»αñ¿αÑìαññαÑü",
+    mastery: "αñ¬αÑìαñ░αñ╛αñ╡αÑÇαñúαÑìαñ»αñ«αÑì", modulesCompleted: "αñàαñºαÑìαñ»αñ╛αñ»αñ╛αñâ αñ¬αÑéαñ░αÑìαñúαñ╛αñâ", enrollNewSubject: "αñ¿αÑéαññαñ¿αñ╡αñ┐αñ╖αñ»αÑç αñ¬αñ₧αÑìαñ£αÑÇαñòαñ░αñúαñé αñòαÑüαñ░αÑìαñ╡αñ¿αÑìαññαÑü",
+    backHome: "αñ«αÑüαñûαÑìαñ»αñ¬αÑâαñ╖αÑìαñáαñé αñ¬αÑìαñ░αññαñ┐ αñùαñÜαÑìαñ¢αñ¿αÑìαññαÑü", createProfile: "αñ╕αÑìαñ╡αñ╕αÑìαñ» αñ¬αñ░αñ┐αñÜαñ»αñé αñ░αñÜαñ»αñ¿αÑìαññαÑü", joinCommunity: "αñåαñ£αÑÇαñ╡αñ¿αñé αñ¬αñáαññαñ╛αñé αñ╕αñ«αÑüαñªαñ╛αñ»αÑç αñàαñ¿αÑìαññαñ░αÑìαñ¡αñ╡αñ¿αÑìαññαÑüαÑñ",
+    fullName: "αñ¬αÑéαñ░αÑìαñúαñ¿αñ╛αñ«", enterName: "αñ╕αÑìαñ╡αñ╕αÑìαñ» αñ¬αÑéαñ░αÑìαñúαñ¿αñ╛αñ« αñ▓αñ┐αñûαñ¿αÑìαññαÑü", className: "αñòαñòαÑìαñ╖αñ╛", selectClass: "αñòαñòαÑìαñ╖αñ╛αñé αñÜαñ┐αñ¿αÑìαñ╡αñ¿αÑìαññαÑü",
+    board: "αñ«αñúαÑìαñíαñ▓αñ«αÑì", selectBoard: "αñ«αñúαÑìαñíαñ▓αñé αñÜαñ┐αñ¿αÑìαñ╡αñ¿αÑìαññαÑü", preferredLanguage: "αñçαñ╖αÑìαñƒαñ╛ αñ¡αñ╛αñ╖αñ╛", beginLearning: "αñàαñºαÑìαñ»αñ»αñ¿αñ«αÑì αñåαñ░αñ¡αñ╕αÑìαñ╡",
+    studentPortal: "αñ¢αñ╛αññαÑìαñ░-αñ¬αÑüαñƒαñ«αÑì", dashboard: "αñ«αÑüαñûαÑìαñ»αñ½αñ▓αñòαñ«αÑì", myLearning: "αñ«αñ« αñ╢αñ┐αñòαÑìαñ╖αñ╛", assignments: "αñòαñ╛αñ░αÑìαñ»αñ╛αñúαñ┐",
+    settings: "αñ¬αÑìαñ░αñ¼αñ¿αÑìαñºαñâ", startStudying: "αñàαñºαÑìαñ»αñ»αñ¿αñ«αÑì αñåαñ░αñ¡αñ╕αÑìαñ╡", back: "αñ¬αÑâαñ╖αÑìαñáαññαñâ", topics: "αñ╡αñ┐αñ╖αñ»αñ╛αñâ",
+    generatingCurriculum: "αñ¬αñ╛αñáαÑìαñ»αñòαÑìαñ░αñ«αñâ αñ£αñ¿αÑìαñ»αññαÑç...", chapterText: "αñàαñºαÑìαñ»αñ╛αñ»αñâ", startReading: "αñ¬αñáαñ¿αñ«αÑì αñåαñ░αñ¡αñ╕αÑìαñ╡",
+    backCurriculum: "αñ¬αñ╛αñáαÑìαñ»αñòαÑìαñ░αñ«αñé αñ¬αÑìαñ░αññαñ┐ αñùαñÜαÑìαñ¢αñ¿αÑìαññαÑü", markComplete: "αñàαñºαÑìαñ»αñ╛αñ»αñé αñ¬αÑéαñ░αÑìαñúαñ«αñ┐αññαñ┐ αñàαñÖαÑìαñòαñ»αñ¿αÑìαññαÑü", chapterComplete: "αñàαñºαÑìαñ»αñ╛αñ»αñâ αñ¬αÑéαñ░αÑìαñúαñâ! αñëαññαÑìαññαñ«αñé αñòαñ╛αñ░αÑìαñ»αñ«αÑìαÑñ",
+    minRead: "αñ¿αñ┐αñ«αÑçαñ╖αñ╛αññαÑìαñ«αñòαñ«αñºαÑìαñ»αñ»αñ¿αñ«αÑì", aiTeacher: "αñÅαñåαñê-αñùαÑüαñ░αÑüαñâ"
+  }
+};
+
 // ===== DATA =====
-const SUBJECTS = [
-  { id: "maths", title: 'Mathematics', desc: 'Calculus & Trigonometry Fundamentals', icon: '🧮', iconBg: 'bg-orange-100', iconColor: 'text-orange-500', progress: 85, modules: 12 },
-  { id: "science", title: 'Science', desc: 'Organic Chemistry & Particle Physics', icon: '🔬', iconBg: 'bg-green-100', iconColor: 'text-green-500', progress: 64, modules: 9 },
-  { id: "social", title: 'Social Studies', desc: 'Modern Indian History & Civics', icon: '🌎', iconBg: 'bg-blue-100', iconColor: 'text-blue-500', progress: 42, modules: 5 },
-  { id: "english", title: 'English', desc: 'Poetry, Rhetoric & Advanced Grammar', icon: '📖', iconBg: 'bg-purple-100', iconColor: 'text-purple-500', progress: 91, modules: 18 },
-  { id: "hindi", title: 'Hindi', desc: 'Literature & Creative Writing', icon: 'अ', iconBg: 'bg-pink-100', iconColor: 'text-pink-500', progress: 78, modules: 11 }
-];
+const getData = (lang) => {
+  if (lang === 'Hindi') {
+    return {
+      SUBJECTS: [
+        { id: "maths", title: 'αñùαñúαñ┐αññ', desc: 'αñòαÑêαñ▓αñòαÑüαñ▓αñ╕ αñöαñ░ αññαÑìαñ░αñ┐αñòαÑïαñúαñ«αñ┐αññαñ┐ αñ«αÑéαñ▓ αñ¼αñ╛αññαÑçαñé', icon: '≡ƒº«', iconBg: 'bg-orange-100', iconColor: 'text-orange-500', progress: 85, modules: 12 },
+        { id: "science", title: 'αñ╡αñ┐αñ£αÑìαñ₧αñ╛αñ¿', desc: 'αñòαñ╛αñ░αÑìαñ¼αñ¿αñ┐αñò αñ░αñ╕αñ╛αñ»αñ¿ αñöαñ░ αñòαñú αñ¡αÑîαññαñ┐αñòαÑÇ', icon: '≡ƒö¼', iconBg: 'bg-green-100', iconColor: 'text-green-500', progress: 64, modules: 9 },
+        { id: "social", title: 'αñ╕αñ╛αñ«αñ╛αñ£αñ┐αñò αñ╡αñ┐αñ£αÑìαñ₧αñ╛αñ¿', desc: 'αñåαñºαÑüαñ¿αñ┐αñò αñ¡αñ╛αñ░αññαÑÇαñ» αñçαññαñ┐αñ╣αñ╛αñ╕ αñöαñ░ αñ¿αñ╛αñùαñ░αñ┐αñò αñ╢αñ╛αñ╕αÑìαññαÑìαñ░', icon: '≡ƒîÄ', iconBg: 'bg-blue-100', iconColor: 'text-blue-500', progress: 42, modules: 5 },
+        { id: "english", title: 'αñàαñéαñùαÑìαñ░αÑçαñ£αñ╝αÑÇ', desc: 'αñòαñ╡αñ┐αññαñ╛, αñàαñ▓αñéαñòαñ╛αñ░ αñöαñ░ αñëαñ¿αÑìαñ¿αññ αñ╡αÑìαñ»αñ╛αñòαñ░αñú', icon: '≡ƒôû', iconBg: 'bg-purple-100', iconColor: 'text-purple-500', progress: 91, modules: 18 },
+        { id: "hindi", title: 'αñ╣αñ┐αñ¿αÑìαñªαÑÇ', desc: 'αñ╕αñ╛αñ╣αñ┐αññαÑìαñ» αñöαñ░ αñ░αñÜαñ¿αñ╛αññαÑìαñ«αñò αñ▓αÑçαñûαñ¿', icon: 'αñà', iconBg: 'bg-pink-100', iconColor: 'text-pink-500', progress: 78, modules: 11 }
+      ],
+      SCIENCE_CHAPTERS: [
+        { id: 1, title: "αñ¬αÑîαñºαÑïαñé αñ«αÑçαñé αñ¬αÑïαñ╖αñú", topics: 6, done: true },
+        { id: 2, title: "αñ¬αÑìαñ░αñ╛αñúαñ┐αñ»αÑïαñé αñ«αÑçαñé αñ¬αÑïαñ╖αñú", topics: 5, done: true },
+        { id: 3, title: "αñ░αÑçαñ╢αÑïαñé αñ╕αÑç αñ╡αñ╕αÑìαññαÑìαñ░ αññαñò", topics: 4, done: false },
+        { id: 4, title: "αñèαñ╖αÑìαñ«αñ╛", topics: 7, done: false },
+        { id: 5, title: "αñàαñ«αÑìαñ▓, αñòαÑìαñ╖αñ╛αñ░αñò αñöαñ░ αñ▓αñ╡αñú", topics: 6, done: false }
+      ],
+      CHAPTER_1_CONTENT: [
+        { type: "text", content: "αñ╕αñ¡αÑÇ αñ╕αñ£αÑÇαñ╡αÑïαñé αñòαÑï αñ¡αÑïαñ£αñ¿ αñòαÑÇ αñåαñ╡αñ╢αÑìαñ»αñòαññαñ╛ αñ╣αÑïαññαÑÇ αñ╣αÑêαÑñ αñ¬αÑîαñºαÑç αñ╣αÑÇ αñÅαñòαñ«αñ╛αññαÑìαñ░ αñÉαñ╕αÑç αñ£αÑÇαñ╡ αñ╣αÑêαñé αñ£αÑï αñàαñ¬αñ¿αñ╛ αñ¡αÑïαñ£αñ¿ αñ╕αÑìαñ╡αñ»αñé αñ¼αñ¿αñ╛ αñ╕αñòαññαÑç αñ╣αÑêαñéαÑñ αñ╡αÑç αñÉαñ╕αñ╛ αñ¬αÑìαñ░αñòαñ╛αñ╢ αñ╕αñéαñ╢αÑìαñ▓αÑçαñ╖αñú αñ¿αñ╛αñ«αñò αñ¬αÑìαñ░αñòαÑìαñ░αñ┐αñ»αñ╛ αñòαÑç αñ«αñ╛αñºαÑìαñ»αñ« αñ╕αÑç αñòαñ░αññαÑç αñ╣αÑêαñéαÑñ αñçαñ╕ αñ¬αÑìαñ░αñòαÑìαñ░αñ┐αñ»αñ╛ αñ«αÑçαñé, αñ¬αÑîαñºαÑç αñ╕αÑéαñ░αÑìαñ» αñòαÑç αñ¬αÑìαñ░αñòαñ╛αñ╢, αñ¬αñ╛αñ¿αÑÇ αñöαñ░ αñòαñ╛αñ░αÑìαñ¼αñ¿ αñíαñ╛αñçαñæαñòαÑìαñ╕αñ╛αñçαñí αñòαñ╛ αñëαñ¬αñ»αÑïαñù αñòαñ░αñòαÑç αñùαÑìαñ▓αÑéαñòαÑïαñ£ αñ¼αñ¿αñ╛αññαÑç αñ╣αÑêαñé ΓÇö αñ£αÑï αñëαñ¿αñòαÑÇ αñèαñ░αÑìαñ£αñ╛ αñòαñ╛ αñ¬αÑìαñ░αñ╛αñÑαñ«αñ┐αñò αñ╕αÑìαñ░αÑïαññ αñ╣αÑêαÑñ" },
+        { type: "avatar_video", topic: "αñ¬αÑîαñºαÑç αñàαñ¬αñ¿αñ╛ αñ¡αÑïαñ£αñ¿ αñòαÑêαñ╕αÑç αñ¼αñ¿αñ╛αññαÑç αñ╣αÑêαñé", video: leafVideo, thumbnail: "https://placehold.co/640x360/F5A623/FFFFFF?text=AI+Teacher+Γû╢", languages: ["English", "Hindi", "Sanskrit"] },
+        { type: "text", content: "αñ¬αÑìαñ░αñòαñ╛αñ╢ αñ╕αñéαñ╢αÑìαñ▓αÑçαñ╖αñú αñ«αÑüαñûαÑìαñ» αñ░αÑéαñ¬ αñ╕αÑç αñ¬αÑîαñºαÑïαñé αñòαÑÇ αñ¬αññαÑìαññαñ┐αñ»αÑïαñé αñ«αÑçαñé αñ╣αÑïαññαñ╛ αñ╣αÑêαÑñ αñ¬αññαÑìαññαñ┐αñ»αÑïαñé αñ«αÑçαñé αñòαÑìαñ▓αÑïαñ░αÑïαñ½αñ┐αñ▓ αñ¿αñ╛αñ«αñò αñÅαñò αñ╣αñ░αñ╛ αñ╡αñ░αÑìαñúαñò αñ╣αÑïαññαñ╛ αñ╣αÑê, αñ£αÑï αñ╕αÑéαñ░αÑìαñ» αñòαÑç αñ¬αÑìαñ░αñòαñ╛αñ╢ αñòαÑï αñàαñ╡αñ╢αÑïαñ╖αñ┐αññ αñòαñ░αññαñ╛ αñ╣αÑêαÑñ αñ¬αññαÑìαññαñ┐αñ»αÑïαñé αñ«αÑçαñé αñ░αñéαñºαÑìαñ░ αñ¿αñ╛αñ«αñò αñ¢αÑïαñƒαÑç αñ¢αñ┐αñªαÑìαñ░ αñ¡αÑÇ αñ╣αÑïαññαÑç αñ╣αÑêαñé αñ£αñ┐αñ¿αñòαÑç αñ«αñ╛αñºαÑìαñ»αñ« αñ╕αÑç αñòαñ╛αñ░αÑìαñ¼αñ¿ αñíαñ╛αñçαñæαñòαÑìαñ╕αñ╛αñçαñí αñ¬αÑîαñºαÑç αñ«αÑçαñé αñ¬αÑìαñ░αñ╡αÑçαñ╢ αñòαñ░αññαÑÇ αñ╣αÑêαÑñ" },
+        { type: "cartoon_video", topic: "αñ¬αÑîαñºαÑç αñ«αÑçαñé αñ¬αñ╛αñ¿αÑÇ αñòαÑÇ αñ»αñ╛αññαÑìαñ░αñ╛", video: plantVideo, thumbnail: "https://placehold.co/640x480/2E7D52/FFFFFF?text=≡ƒÄ¿+Visual+Story+Γû╢", languages: ["English", "Hindi", "Sanskrit"] },
+        { type: "text", content: "αñ¬αÑîαñºαÑïαñé αñòαÑï αñ╕αÑìαñ╡αñ¬αÑïαñ╖αÑÇ αñòαñ╣αñ╛ αñ£αñ╛αññαñ╛ αñ╣αÑê αñòαÑìαñ»αÑïαñéαñòαñ┐ αñ╡αÑç αñàαñ¬αñ¿αñ╛ αñ¡αÑïαñ£αñ¿ αñ╕αÑìαñ╡αñ»αñé αñ¼αñ¿αñ╛αññαÑç αñ╣αÑêαñéαÑñ αñ£αñ╛αñ¿αñ╡αñ░αÑïαñé αñöαñ░ αñ«αñ¿αÑüαñ╖αÑìαñ»αÑïαñé αñòαÑï αñ╡αñ┐αñ╖αñ«αñ¬αÑïαñ╖αÑÇ αñòαñ╣αñ╛ αñ£αñ╛αññαñ╛ αñ╣αÑê αñòαÑìαñ»αÑïαñéαñòαñ┐ αñ╡αÑç αñ¡αÑïαñ£αñ¿ αñòαÑç αñ▓αñ┐αñÅ αñ¬αÑîαñºαÑïαñé αñ»αñ╛ αñàαñ¿αÑìαñ» αñ£αñ╛αñ¿αñ╡αñ░αÑïαñé αñ¬αñ░ αñ¿αñ┐αñ░αÑìαñ¡αñ░ αñ╣αÑïαññαÑç αñ╣αÑêαñéαÑñ" }
+      ]
+    };
+  }
 
-const SCIENCE_CHAPTERS = [
-  { id: 1, title: "Nutrition in Plants", topics: 6, done: true },
-  { id: 2, title: "Nutrition in Animals", topics: 5, done: true },
-  { id: 3, title: "Fibre to Fabric", topics: 4, done: false },
-  { id: 4, title: "Heat", topics: 7, done: false },
-  { id: 5, title: "Acids, Bases and Salts", topics: 6, done: false }
-];
+  if (lang === 'Sanskrit') {
+    return {
+      SUBJECTS: [
+        { id: "maths", title: 'αñùαñúαñ┐αññαñ«αÑì', desc: 'αñòαñ▓αñ¿αñ«αÑì αññαÑìαñ░αñ┐αñòαÑïαñúαñ«αñ┐αññαñ┐αñâ αñÜ', icon: '≡ƒº«', iconBg: 'bg-orange-100', iconColor: 'text-orange-500', progress: 85, modules: 12 },
+        { id: "science", title: 'αñ╡αñ┐αñ£αÑìαñ₧αñ╛αñ¿αñ«αÑì', desc: 'αñ╕αÑçαñéαñªαÑìαñ░αñ┐αñ» αñ░αñ╕αñ╛αñ»αñ¿αñé αñòαñúαñ¡αÑîαññαñ┐αñòαÑÇ αñÜ', icon: '≡ƒö¼', iconBg: 'bg-green-100', iconColor: 'text-green-500', progress: 64, modules: 9 },
+        { id: "social", title: 'αñ╕αñ«αñ╛αñ£αñ╡αñ┐αñ£αÑìαñ₧αñ╛αñ¿αñ«αÑì', desc: 'αñåαñºαÑüαñ¿αñ┐αñò αñ¡αñ╛αñ░αññαÑÇαñ» αñçαññαñ┐αñ╣αñ╛αñ╕αñâ αñ¿αñ╛αñùαñ░αñ┐αñòαñ╢αñ╛αñ╕αÑìαññαÑìαñ░αñé αñÜ', icon: '≡ƒîÄ', iconBg: 'bg-blue-100', iconColor: 'text-blue-500', progress: 42, modules: 5 },
+        { id: "english", title: 'αñåαñéαñùαÑìαñ▓αñ¡αñ╛αñ╖αñ╛', desc: 'αñòαñ╛αñ╡αÑìαñ»αñé, αñàαñ▓αñÖαÑìαñòαñ╛αñ░αñâ αñëαñ¿αÑìαñ¿αññαñ╡αÑìαñ»αñ╛αñòαñ░αñúαñé αñÜ', icon: '≡ƒôû', iconBg: 'bg-purple-100', iconColor: 'text-purple-500', progress: 91, modules: 18 },
+        { id: "hindi", title: 'αñ╣αñ┐αñ¿αÑìαñªαÑÇ', desc: 'αñ╕αñ╛αñ╣αñ┐αññαÑìαñ»αñé αñ░αñÜαñ¿αñ╛αññαÑìαñ«αñòαñé αñ▓αÑçαñûαñ¿αñé αñÜ', icon: 'αñà', iconBg: 'bg-pink-100', iconColor: 'text-pink-500', progress: 78, modules: 11 }
+      ],
+      SCIENCE_CHAPTERS: [
+        { id: 1, title: "αñ¬αñ╛αñªαñ¬αÑçαñ╖αÑü αñ¬αÑïαñ╖αñúαñ«αÑì", topics: 6, done: true },
+        { id: 2, title: "αñ£αñ¿αÑìαññαÑüαñ╖αÑü αñ¬αÑïαñ╖αñúαñ«αÑì", topics: 5, done: true },
+        { id: 3, title: "αññαñ¿αÑìαññαÑüαññαñâ αñ╡αñ╕αÑìαññαÑìαñ░αñ¬αñ░αÑìαñ»αñ¿αÑìαññαñ«αÑì", topics: 4, done: false },
+        { id: 4, title: "αñèαñ╖αÑìαñ«αñ╛", topics: 7, done: false },
+        { id: 5, title: "αñàαñ«αÑìαñ▓αñâ, αñòαÑìαñ╖αñ╛αñ░αñâ αñ▓αñ╡αñúαñ╛αñ¿αñ┐ αñÜ", topics: 6, done: false }
+      ],
+      CHAPTER_1_CONTENT: [
+        { type: "text", content: "αñ╕αñ░αÑìαñ╡αÑçαñ¡αÑìαñ»αñâ αñ£αÑÇαñ╡αÑçαñ¡αÑìαñ»αñâ αñåαñ╣αñ╛αñ░αñ╕αÑìαñ» αñåαñ╡αñ╢αÑìαñ»αñòαññαñ╛ αñ¡αñ╡αññαñ┐αÑñ αñ¬αñ╛αñªαñ¬αñ╛αñâ αñÅαñ╡ αñ╕αÑìαñ╡αñ¡αÑïαñ£αñ¿αñé αñ╕αÑìαñ╡αñ»αñé αñ¿αñ┐αñ░αÑìαñ«αñ╛αññαÑüαñé αñ╕αñ«αñ░αÑìαñÑαñ╛αñâ αñ╕αñ¿αÑìαññαñ┐αÑñ αññαÑç αñ¬αÑìαñ░αñòαñ╛αñ╢αñ╕αñéαñ╢αÑìαñ▓αÑçαñ╖αñú-αñ¬αÑìαñ░αñòαÑìαñ░αñ┐αñ»αñ╛αñªαÑìαñ╡αñ╛αñ░αñ╛ αñÅαññαññαÑì αñòαÑüαñ░αÑìαñ╡αñ¿αÑìαññαñ┐αÑñ αñàαññαÑìαñ░ αñ¬αñ╛αñªαñ¬αñ╛αñâ αñ╕αÑéαñ░αÑìαñ»αñ╛αññαñ¬αñ╕αÑìαñ», αñ£αñ▓αñ╕αÑìαñ», α▓àαñÖαÑìαñùαñ╛αñ░αñªαÑìαñ╡αñ┐αñ¬αÑìαñ░αñ£αñ╛αñ░αñòαñ╕αÑìαñ» (Carbon dioxide) αñÜ αñ╕αñ╛αñ╣αñ╛αñ»αÑìαñ»αÑçαñ¿ αñ╕αÑìαñ╡αñ╕αÑìαñ» αñ«αÑüαñûαÑìαñ»αÑïαñ░αÑìαñ£αñ╛αñ«αÑì 'αñùαÑìαñ▓αÑéαñòαÑïαñ£' αñ¿αñ┐αñ░αÑìαñ«αñ╛αñ¿αÑìαññαñ┐αÑñ" },
+        { type: "avatar_video", topic: "αñ¬αñ╛αñªαñ¬αñ╛αñâ αñòαñÑαñé αñ╕αÑìαñ╡αñ¡αÑïαñ£αñ¿αñé αñòαÑüαñ░αÑìαñ╡αñ¿αÑìαññαñ┐", video: leafVideo, thumbnail: "https://placehold.co/640x360/F5A623/FFFFFF?text=AI+Teacher+Γû╢", languages: ["English", "Hindi", "Sanskrit"] },
+        { type: "text", content: "αñ¬αÑìαñ░αñòαñ╛αñ╢αñ╕αñéαñ╢αÑìαñ▓αÑçαñ╖αñúαñé αñ«αÑüαñûαÑìαñ»αññαñ»αñ╛ αñ¬αñ╛αñªαñ¬αñ╛αñ¿αñ╛αñé αñ¬αñ░αÑìαñúαÑçαñ╖αÑü αñ¡αñ╡αññαñ┐αÑñ αñ¬αñ░αÑìαñúαÑçαñ╖αÑü 'αñ╣αñ░αñ┐αññαñòαÑÇ' (Chlorophyll) αñçαññαñ┐ αñ╣αñ░αñ┐αññαñ╡αñ░αÑìαñúαñòαñâ αñ¡αñ╡αññαñ┐, αñ»αñâ αñ╕αÑéαñ░αÑìαñ»αñ╛αññαñ¬αñé αñùαÑâαñ╣αÑìαñúαñ╛αññαñ┐αÑñ αñ¬αñ░αÑìαñúαÑçαñ╖αÑü αñ╕αÑéαñòαÑìαñ╖αÑìαñ«αñ╛αñúαñ┐ αñ¢αñ┐αñªαÑìαñ░αñ╛αñúαñ┐ αñàαñ¬αñ┐ αñ╕αñ¿αÑìαññαñ┐, αñ»αÑêαñâ αñàαñÖαÑìαñùαñ╛αñ░αñªαÑìαñ╡αñ┐αñ¬αÑìαñ░αñ£αñ╛αñ░αñòαñâ αñ¬αñ╛αñªαñ¬αñ╕αÑìαñ» αñàαñ¿αÑìαññαñâ αñ¬αÑìαñ░αñ╡αñ┐αñ╢αññαñ┐αÑñ" },
+        { type: "cartoon_video", topic: "αñ¬αñ╛αñªαñ¬αÑç αñ£αñ▓αñ╕αÑìαñ» αñ»αñ╛αññαÑìαñ░αñ╛", video: plantVideo, thumbnail: "https://placehold.co/640x480/2E7D52/FFFFFF?text=≡ƒÄ¿+Visual+Story+Γû╢", languages: ["English", "Hindi", "Sanskrit"] },
+        { type: "text", content: "αñ¬αñ╛αñªαñ¬αñ╛αñâ 'αñ╕αÑìαñ╡αñ¬αÑïαñ╖αñ┐αñúαñâ' αñçαññαñ┐ αñòαñÑαÑìαñ»αñ¿αÑìαññαÑç αñ»αññαÑïαñ╣αñ┐ αññαÑç αñ╕αÑìαñ╡αñ¡αÑïαñ£αñ¿αñé αñ╕αÑìαñ╡αñ»αñé αñ¿αñ┐αñ░αÑìαñ«αñ╛αñ¿αÑìαññαñ┐αÑñ αñ¬αñ╢αñ╡αñâ αñ«αñ╛αñ¿αñ╡αñ╛αñâ αñÜ 'αñ¬αñ░αñ¬αÑïαñ╖αñ┐αñúαñâ' αñçαññαñ┐ αñòαñÑαÑìαñ»αñ¿αÑìαññαÑç αñ»αññαÑïαñ╣αñ┐ αññαÑç αñåαñ╣αñ╛αñ░αñ╛αñ» αñàαñ¿αÑìαñ»αÑçαñ╖αÑü αñ¬αñ╛αñªαñ¬αÑçαñ╖αÑü αñ£αñéαññαÑüαñ╖αÑü αñ╡αñ╛ αñåαñ╢αÑìαñ░αñ┐αññαñ╛αñâ αñ¡αñ╡αñ¿αÑìαññαñ┐αÑñ" }
+      ]
+    };
+  }
 
-const CHAPTER_1_CONTENT = [
-  { type: "text", content: "All living organisms require food. Plants are the only organisms that can prepare their own food. They do this through a process called photosynthesis. In this process, plants use sunlight, water, and carbon dioxide to make glucose — their primary source of energy." },
-  { type: "avatar_video", topic: "How Plants Make Food", video: leafVideo, thumbnail: "https://placehold.co/640x360/F5A623/FFFFFF?text=AI+Teacher+▶", languages: ["English", "Hindi", "Sanskrit"] },
-  { type: "text", content: "Photosynthesis takes place mainly in the leaves of plants. Leaves have a green pigment called chlorophyll, which absorbs sunlight. The leaves also have tiny pores called stomata through which carbon dioxide enters the plant." },
-  { type: "cartoon_video", topic: "Journey of Water in a Plant", video: plantVideo, thumbnail: "https://placehold.co/640x480/2E7D52/FFFFFF?text=🎨+Visual+Story+▶", languages: ["English", "Hindi", "Sanskrit"] },
-  { type: "text", content: "Plants are called autotrophs because they produce their own food. Animals and humans are called heterotrophs because they depend on plants or other animals for food." }
-];
+  // Fallback to English
+  return {
+    SUBJECTS: [
+      { id: "maths", title: 'Mathematics', desc: 'Calculus & Trigonometry Fundamentals', icon: '≡ƒº«', iconBg: 'bg-orange-100', iconColor: 'text-orange-500', progress: 85, modules: 12 },
+      { id: "science", title: 'Science', desc: 'Organic Chemistry & Particle Physics', icon: '≡ƒö¼', iconBg: 'bg-green-100', iconColor: 'text-green-500', progress: 64, modules: 9 },
+      { id: "social", title: 'Social Studies', desc: 'Modern Indian History & Civics', icon: '≡ƒîÄ', iconBg: 'bg-blue-100', iconColor: 'text-blue-500', progress: 42, modules: 5 },
+      { id: "english", title: 'English', desc: 'Poetry, Rhetoric & Advanced Grammar', icon: '≡ƒôû', iconBg: 'bg-purple-100', iconColor: 'text-purple-500', progress: 91, modules: 18 },
+      { id: "hindi", title: 'Hindi', desc: 'Literature & Creative Writing', icon: 'αñà', iconBg: 'bg-pink-100', iconColor: 'text-pink-500', progress: 78, modules: 11 }
+    ],
+    SCIENCE_CHAPTERS: [
+      { id: 1, title: "Nutrition in Plants", topics: 6, done: true },
+      { id: 2, title: "Nutrition in Animals", topics: 5, done: true },
+      { id: 3, title: "Fibre to Fabric", topics: 4, done: false },
+      { id: 4, title: "Heat", topics: 7, done: false },
+      { id: 5, title: "Acids, Bases and Salts", topics: 6, done: false }
+    ],
+    CHAPTER_1_CONTENT: [
+      { type: "text", content: "All living organisms require food. Plants are the only organisms that can prepare their own food. They do this through a process called photosynthesis. In this process, plants use sunlight, water, and carbon dioxide to make glucose ΓÇö their primary source of energy." },
+      { type: "avatar_video", topic: "How Plants Make Food", video: leafVideo, thumbnail: "https://placehold.co/640x360/F5A623/FFFFFF?text=AI+Teacher+Γû╢", languages: ["English", "Hindi", "Sanskrit"] },
+      { type: "text", content: "Photosynthesis takes place mainly in the leaves of plants. Leaves have a green pigment called chlorophyll, which absorbs sunlight. The leaves also have tiny pores called stomata through which carbon dioxide enters the plant." },
+      { type: "cartoon_video", topic: "Journey of Water in a Plant", video: plantVideo, thumbnail: "https://placehold.co/640x480/2E7D52/FFFFFF?text=≡ƒÄ¿+Visual+Story+Γû╢", languages: ["English", "Hindi", "Sanskrit"] },
+      { type: "text", content: "Plants are called autotrophs because they produce their own food. Animals and humans are called heterotrophs because they depend on plants or other animals for food." }
+    ]
+  };
+};
 
 // ===== APP =====
 export default function App() {
