@@ -22,9 +22,9 @@ const SCIENCE_CHAPTERS = [
 
 const CHAPTER_1_CONTENT = [
   { type: "text", content: "All living organisms require food. Plants are the only organisms that can prepare their own food. They do this through a process called photosynthesis. In this process, plants use sunlight, water, and carbon dioxide to make glucose — their primary source of energy." },
-  { type: "avatar_video", topic: "How Plants Make Food", video: leafVideo, thumbnail: "https://placehold.co/640x360/F5A623/FFFFFF?text=AI+Teacher+▶", languages: ["English", "Hindi", "Sanskrit"] },
+  { type: "avatar_video", topic: "How Plants Make Food", video: "https://www.w3schools.com/html/mov_bbb.mp4", thumbnail: "https://placehold.co/640x360/F5A623/FFFFFF?text=AI+Teacher+▶", languages: ["English", "Hindi", "Sanskrit"] },
   { type: "text", content: "Photosynthesis takes place mainly in the leaves of plants. Leaves have a green pigment called chlorophyll, which absorbs sunlight. The leaves also have tiny pores called stomata through which carbon dioxide enters the plant." },
-  { type: "cartoon_video", topic: "Journey of Water in a Plant", video: plantVideo, thumbnail: "https://placehold.co/640x480/2E7D52/FFFFFF?text=🎨+Visual+Story+▶", languages: ["English", "Hindi", "Sanskrit"] },
+  { type: "cartoon_video", topic: "Journey of Water in a Plant", video: "https://www.w3schools.com/html/mov_bbb.mp4", thumbnail: "https://placehold.co/640x480/2E7D52/FFFFFF?text=🎨+Visual+Story+▶", languages: ["English", "Hindi", "Sanskrit"] },
   { type: "text", content: "Plants are called autotrophs because they produce their own food. Animals and humans are called heterotrophs because they depend on plants or other animals for food." }
 ];
 
