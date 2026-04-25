@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Literata:ital,opsz,wght@0,7..72,200..900;1,7..72,200..900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-navy: #0D1B2A;
+  --color-cream: #FEFAF2;
+  --color-saffron: #F5A623;
+  --color-green: #2E7D52;
+  --color-text-dark: #1A1A2E;
+  --color-text-light: #F0EBE0;
+
+  --font-heading: 'Baloo 2', sans-serif;
+  --font-reading: 'Literata', serif;
+  --font-ui: 'DM Sans', sans-serif;
+}
+
+body {
+  font-family: var(--font-ui);
+  background-color: var(--color-cream);
+  color: var(--color-text-dark);
+  margin: 0;
+}
+
+.font-heading {
+  font-family: var(--font-heading);
+}
+
+.font-reading {
+  font-family: var(--font-reading);
+}
+
+.font-ui {
+  font-family: var(--font-ui);
+}
+
+@keyframes float {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(10deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+.animate-blob {
+  animation: float 8s infinite ease-in-out;
+}
+
+.animate-blob-slow {
+  animation: float 12s infinite ease-in-out reverse;
+}
+
+/* custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
