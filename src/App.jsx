@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Globe, Bell, LayoutDashboard, BookOpen, FileText, Library, Settings, Plus, MessageSquare, ArrowLeft, CheckCircle2, Circle } from 'lucide-react';
+import { Globe, Bell, LayoutDashboard, BookOpen, FileText, Library, Settings, Plus, MessageSquare, ArrowLeft, CheckCircle2, Circle, Star, ArrowRight, ShieldCheck, Mail, Share2, Award, Zap, Compass, Monitor } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 // ===== DATA =====
@@ -34,16 +34,23 @@ export default function App() {
   const [activeSubject, setActiveSubject] = useState(null);
   const [activeChapter, setActiveChapter] = useState(null);
 
+  const navigateTo = (newView) => {
+    window.scrollTo(0, 0);
+    setView(newView);
+  };
+
   return (
     <div className="min-h-screen bg-[#FCFAEF] font-sans text-gray-900 selection:bg-orange-200">
-      {view === 'landing' && <LandingView onComplete={() => setView('dashboard')} profile={profile} setProfile={setProfile} />}
+      {view === 'landing' && <FullLandingView onGetStarted={() => navigateTo('registration')} />}
+      
+      {view === 'registration' && <RegistrationView onComplete={() => navigateTo('dashboard')} profile={profile} setProfile={setProfile} />}
       
       {view === 'dashboard' && (
         <DashboardView 
           profile={profile}
           onSelectSubject={(subj) => {
             setActiveSubject(subj);
-            setView('chapterList');
+            navigateTo('chapterList');
           }} 
         />
       )}
@@ -52,10 +59,10 @@ export default function App() {
         <ChapterListView 
           subject={activeSubject}
           profile={profile}
-          onBack={() => setView('dashboard')}
+          onBack={() => navigateTo('dashboard')}
           onSelectChapter={(chap) => {
             setActiveChapter(chap);
-            setView('reader');
+            navigateTo('reader');
           }}
         />
       )}
@@ -65,7 +72,7 @@ export default function App() {
           subject={activeSubject}
           chapter={activeChapter}
           profile={profile}
-          onBack={() => setView('chapterList')}
+          onBack={() => navigateTo('chapterList')}
         />
       )}
     </div>
@@ -94,50 +101,210 @@ function TopNav() {
   );
 }
 
-function Sidebar({ activeView, onNavigate }) {
-  return (
-    <div className="w-[240px] bg-white border-r border-gray-100 flex flex-col hidden md:flex shrink-0 h-[calc(100vh-77px)] sticky top-[77px]">
-      <div className="p-6">
-        <h2 className="font-serif font-bold text-lg text-gray-900">VidyaPath</h2>
-        <p className="text-[10px] font-bold tracking-widest text-gray-400 uppercase mt-1">Student Portal</p>
-      </div>
-      
-      <div className="flex-1 py-4">
-        <NavItem icon={<LayoutDashboard className="w-5 h-5" />} label="Dashboard" active={activeView === 'dashboard'} onClick={() => onNavigate('dashboard')} />
-        <NavItem icon={<BookOpen className="w-5 h-5" />} label="My Learning" active={activeView === 'learning'} onClick={() => onNavigate('dashboard')} />
-        <NavItem icon={<FileText className="w-5 h-5" />} label="Assignments" />
-        <NavItem icon={<Library className="w-5 h-5" />} label="Library" />
-        <NavItem icon={<Settings className="w-5 h-5" />} label="Settings" />
-      </div>
-      
-      <div className="p-6">
-        <button className="w-full py-3 bg-[#F5A623] text-gray-900 font-bold rounded-lg shadow-sm hover:bg-[#E0931B] transition-colors">
-          Start Studying
-        </button>
-      </div>
-    </div>
-  );
-}
-
-function NavItem({ icon, label, active, onClick }) {
-  return (
-    <div 
-      onClick={onClick}
-      className={`flex items-center px-6 py-3 cursor-pointer border-l-4 transition-colors ${
-        active 
-          ? 'border-orange-400 bg-orange-50 text-orange-600' 
-          : 'border-transparent text-gray-500 hover:bg-gray-50 hover:text-gray-800'
-      }`}
-    >
-      <div className="mr-3">{icon}</div>
-      <span className="font-medium text-sm">{label}</span>
-    </div>
-  );
-}
-
 // ===== VIEWS =====
 
-function LandingView({ onComplete, profile, setProfile }) {
+function FullLandingView({ onGetStarted }) {
+  return (
+    <div className="min-h-screen bg-[#FAFAF8]">
+      <TopNav />
+      
+      {/* Hero Section */}
+      <section className="max-w-7xl mx-auto px-8 py-16 lg:py-24 flex flex-col lg:flex-row items-center justify-between">
+        <div className="lg:w-1/2 pr-12 mb-16 lg:mb-0">
+          <div className="inline-block px-4 py-1.5 bg-green-100 text-green-700 text-xs font-bold tracking-wider rounded-full mb-8">
+            NEW ACADEMIC YEAR 2024
+          </div>
+          <h1 className="text-5xl lg:text-7xl font-serif font-bold text-gray-900 leading-[1.1] mb-6">
+            Where <span className="text-[#F5A623]">Tradition</span> Meets Digital <span className="relative inline-block border-b-4 border-green-600">Excellence</span>
+          </h1>
+          <p className="text-gray-600 text-lg leading-relaxed mb-10 max-w-lg">
+            Bridge the gap between timeless academic wisdom and the modern digital landscape. A focused sanctuary for scholars, learners, and dreamers.
+          </p>
+          <div className="flex items-center space-x-4">
+            <button 
+              onClick={onGetStarted}
+              className="px-8 py-3.5 bg-[#F5A623] hover:bg-[#E0931B] text-gray-900 font-bold text-lg rounded-lg shadow-sm hover:shadow-md transition-all"
+            >
+              Get Started
+            </button>
+            <button className="px-8 py-3.5 bg-white border border-gray-300 hover:border-gray-400 text-gray-700 font-bold text-lg rounded-lg shadow-sm transition-all">
+              Explore Courses
+            </button>
+          </div>
+        </div>
+
+        <div className="lg:w-1/2 relative flex justify-end">
+          <div className="absolute top-10 -left-10 bg-white p-4 rounded-xl shadow-xl flex items-center space-x-3 z-20 border border-gray-100">
+            <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+              <Star className="w-5 h-5 text-green-600 fill-current" />
+            </div>
+            <div>
+              <div className="font-bold text-gray-900">4.9/5</div>
+              <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">TRUSTED BY 20K+ STUDENTS</div>
+            </div>
+          </div>
+          
+          <div className="w-full max-w-[500px] aspect-square bg-[#224A51] rounded-2xl relative overflow-hidden shadow-2xl flex items-center justify-center p-8">
+            {/* Abstract mock UI graphic matching screenshot */}
+            <div className="w-full h-full border border-white/20 rounded-xl relative">
+               <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                 <div className="w-32 h-32 rounded-full border-2 border-[#4A7D86] flex items-center justify-center relative">
+                    <div className="w-20 h-20 rounded-full border-2 border-white flex items-center justify-center">
+                       <Monitor className="w-8 h-8 text-white opacity-50" />
+                    </div>
+                    <div className="absolute -top-10 left-1/2 w-8 h-8 bg-white/10 rounded-full"></div>
+                    <div className="absolute top-1/2 -left-10 w-8 h-8 bg-white/10 rounded-full"></div>
+                 </div>
+               </div>
+               <div className="absolute bottom-8 right-8 px-6 py-2 bg-[#0D2428] text-white font-bold tracking-widest text-sm rounded-lg border border-white/10">
+                 SAFE FOR WORK
+               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Partners Section */}
+      <section className="bg-white py-12 border-y border-gray-100">
+        <div className="max-w-7xl mx-auto px-8">
+          <h3 className="text-center text-xs font-bold tracking-widest text-gray-400 uppercase mb-8">Our Academic Partners</h3>
+          <div className="flex flex-wrap justify-center items-center gap-12 md:gap-24 opacity-60 grayscale">
+            <div className="flex items-center space-x-2"><BookOpen className="w-6 h-6"/> <span className="font-serif text-xl font-bold">Stanford</span></div>
+            <div className="flex items-center space-x-2"><ShieldCheck className="w-6 h-6"/> <span className="font-serif text-xl font-bold">Oxford</span></div>
+            <div className="flex items-center space-x-2"><Award className="w-6 h-6"/> <span className="font-serif text-xl font-bold">Heritage</span></div>
+            <div className="flex items-center space-x-2"><Library className="w-6 h-6"/> <span className="font-serif text-xl font-bold">Library</span></div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-24 max-w-7xl mx-auto px-8">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-serif font-bold text-gray-900 inline-block relative">
+            Why VidyaPath?
+            <div className="absolute -bottom-3 left-1/4 right-1/4 h-1 bg-[#F5A623]"></div>
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="bg-white rounded-2xl border border-gray-100 p-8 shadow-sm flex flex-col">
+            <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center mb-6">
+              <Award className="w-5 h-5 text-orange-500" />
+            </div>
+            <h3 className="text-xl font-bold text-gray-900 mb-3">Expert Mentors</h3>
+            <p className="text-gray-500 text-sm leading-relaxed mb-6">
+              Learn from leading scholars and industry practitioners who provide personalized guidance tailored to your academic journey. Our mentors are selected for both their knowledge and their empathy.
+            </p>
+            <div className="mt-auto flex items-center gap-4">
+              <div className="flex -space-x-3">
+                <div className="w-8 h-8 rounded-full border-2 border-white bg-blue-200"></div>
+                <div className="w-8 h-8 rounded-full border-2 border-white bg-green-200"></div>
+                <div className="w-8 h-8 rounded-full border-2 border-white bg-purple-200"></div>
+              </div>
+              <span className="text-[10px] font-bold text-gray-400 uppercase">+400 active mentors</span>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-2xl border border-gray-100 p-8 shadow-sm flex flex-col">
+            <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mb-6">
+              <Compass className="w-5 h-5 text-green-600" />
+            </div>
+            <h3 className="text-xl font-bold text-gray-900 mb-3">Organic Learning</h3>
+            <p className="text-gray-500 text-sm leading-relaxed mb-6">
+              Our curriculum flows naturally, mimicking the way the human brain acquires knowledge through discovery.
+            </p>
+          </div>
+
+          <div className="bg-[#FAF9F5] rounded-2xl border border-gray-200 p-8 shadow-sm flex flex-col">
+            <div className="w-10 h-10 flex items-center justify-center mb-6">
+              <Zap className="w-6 h-6 text-gray-600" />
+            </div>
+            <h3 className="text-xl font-bold text-gray-900 mb-3">Linear Paths</h3>
+            <p className="text-gray-500 text-sm leading-relaxed mb-6">
+              Clear, structured roadmaps that ensure you never feel lost in the sea of information.
+            </p>
+          </div>
+
+          <div className="lg:col-span-3 bg-[#1A1A2E] rounded-2xl p-8 lg:p-12 shadow-xl flex flex-col md:flex-row items-center justify-between text-white overflow-hidden relative">
+            <div className="md:w-1/2 relative z-10">
+              <h3 className="text-2xl font-serif font-bold text-[#F5A623] mb-4">Distraction-Free Focus</h3>
+              <p className="text-gray-300 text-sm leading-relaxed mb-8 max-w-md">
+                A tactile, paper-like interface designed to reduce digital eye strain and keep your attention where it belongs: on your studies. No pop-ups, no noise. Just pure learning.
+              </p>
+              <button className="text-[#F5A623] font-bold text-sm tracking-wider flex items-center hover:text-white transition-colors">
+                LEARN MORE <ArrowRight className="w-4 h-4 ml-2" />
+              </button>
+            </div>
+            <div className="md:w-1/2 mt-8 md:mt-0 flex justify-end relative z-10 w-full">
+              <div className="w-full max-w-sm aspect-[4/3] bg-black/50 border border-white/10 rounded-xl flex items-center justify-center overflow-hidden relative">
+                <div className="w-48 h-48 rounded-full border border-blue-500/30 shadow-[0_0_50px_rgba(59,130,246,0.3)] flex items-center justify-center">
+                  <div className="w-32 h-32 rounded-full border border-blue-400/50 shadow-[0_0_30px_rgba(59,130,246,0.5)] flex items-center justify-center">
+                    <div className="w-16 h-16 rounded-full bg-blue-300 shadow-[0_0_20px_rgba(147,197,253,0.8)]"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="max-w-7xl mx-auto px-8 py-12 mb-24">
+        <div className="bg-gradient-to-br from-[#D4AF37] to-[#B58500] rounded-3xl p-12 lg:p-20 text-center relative overflow-hidden shadow-xl">
+          <div className="relative z-10 max-w-2xl mx-auto">
+            <h2 className="text-4xl font-serif font-bold text-gray-900 mb-6">Ready to start your scholarly journey?</h2>
+            <p className="text-gray-800 text-lg mb-10 opacity-90">
+              Join thousands of students who have rediscovered the joy of deep, focused learning with VidyaPath.
+            </p>
+            <button 
+              onClick={onGetStarted}
+              className="px-10 py-4 bg-[#1A1A2E] hover:bg-black text-white font-bold text-lg rounded-full shadow-lg hover:shadow-xl transition-all"
+            >
+              Enroll Now for Free
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-[#F0EEE6] py-16 border-t border-gray-200">
+        <div className="max-w-7xl mx-auto px-8 flex flex-col md:flex-row justify-between">
+          <div className="max-w-xs mb-10 md:mb-0">
+            <h4 className="font-serif font-bold text-xl text-gray-900 mb-4">VidyaPath</h4>
+            <p className="text-sm text-gray-600 leading-relaxed">
+              Empowering students through the harmony of traditional pedagogy and modern technological tools.
+            </p>
+          </div>
+          
+          <div className="flex gap-16 md:gap-32">
+            <div>
+              <h5 className="font-bold text-xs text-gray-500 uppercase tracking-wider mb-6">Platform</h5>
+              <div className="space-y-4 text-sm text-gray-700">
+                <div><a href="#" className="hover:text-black">All Courses</a></div>
+                <div><a href="#" className="hover:text-black">Mentorship</a></div>
+                <div><a href="#" className="hover:text-black">Library</a></div>
+                <div><a href="#" className="hover:text-black">Scholarships</a></div>
+              </div>
+            </div>
+            <div>
+              <h5 className="font-bold text-xs text-gray-500 uppercase tracking-wider mb-6">Connect</h5>
+              <div className="flex space-x-4 text-gray-700">
+                <Globe className="w-5 h-5 cursor-pointer hover:text-black" />
+                <Mail className="w-5 h-5 cursor-pointer hover:text-black" />
+                <Share2 className="w-5 h-5 cursor-pointer hover:text-black" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="max-w-7xl mx-auto px-8 mt-16 pt-8 border-t border-gray-300 text-center text-xs text-gray-500">
+          © 2024 VidyaPath Education. All rights reserved. Built for the modern scholar.
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+function RegistrationView({ onComplete, profile, setProfile }) {
   const languages = ['English', 'Hindi', 'Sanskrit'];
 
   return (
@@ -146,39 +313,15 @@ function LandingView({ onComplete, profile, setProfile }) {
       
       <TopNav />
       
-      <main className="flex-1 max-w-7xl mx-auto w-full px-8 py-12 flex flex-col lg:flex-row items-center justify-between z-10">
-        <div className="lg:w-1/2 max-w-xl pr-8">
-          <div className="inline-block px-4 py-1.5 bg-green-100 text-green-700 text-xs font-bold tracking-wider rounded-full mb-8">
-            A MODERN GURUKUL EXPERIENCE
-          </div>
-          <h1 className="text-5xl lg:text-6xl font-serif font-bold text-gray-900 leading-tight mb-4">
-            Where Tradition<br />
-            Meets<br />
-            <span className="text-amber-700">Digital Excellence.</span>
-          </h1>
-          <p className="text-gray-600 text-lg leading-relaxed mb-10 italic">
-            "Knowledge is that which liberates. Embark on a journey designed to nurture focus, wisdom, and mastery through our curated digital pathways."
-          </p>
-          
-          <div className="flex space-x-12">
-            <div className="flex items-start space-x-3">
-              <div className="mt-1 text-green-600">🌱</div>
-              <div>
-                <h4 className="font-bold text-sm text-gray-800">Organic Learning</h4>
-                <p className="text-xs text-gray-500 mt-1">Courses that grow with you.</p>
-              </div>
-            </div>
-            <div className="flex items-start space-x-3">
-              <div className="mt-1 text-green-600">🎓</div>
-              <div>
-                <h4 className="font-bold text-sm text-gray-800">Expert Mentors</h4>
-                <p className="text-xs text-gray-500 mt-1">Guidance at every step.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="lg:w-[480px] w-full mt-12 lg:mt-0">
+      <main className="flex-1 max-w-7xl mx-auto w-full px-8 py-12 flex flex-col lg:flex-row items-center justify-center z-10">
+        
+        <div className="w-full max-w-md">
+          <button 
+            onClick={() => window.location.reload()} 
+            className="flex items-center text-sm text-gray-500 hover:text-gray-900 mb-6 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4 mr-1" /> Back to Home
+          </button>
           <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 sm:p-10 relative">
             <h2 className="text-3xl font-serif font-bold text-center mb-2">Create Your Profile</h2>
             <p className="text-center text-gray-500 text-sm mb-8">Join the community of lifelong learners.</p>
@@ -253,6 +396,47 @@ function LandingView({ onComplete, profile, setProfile }) {
           </div>
         </div>
       </main>
+    </div>
+  );
+}
+
+function Sidebar({ activeView, onNavigate }) {
+  return (
+    <div className="w-[240px] bg-white border-r border-gray-100 flex flex-col hidden md:flex shrink-0 h-[calc(100vh-77px)] sticky top-[77px]">
+      <div className="p-6">
+        <h2 className="font-serif font-bold text-lg text-gray-900">VidyaPath</h2>
+        <p className="text-[10px] font-bold tracking-widest text-gray-400 uppercase mt-1">Student Portal</p>
+      </div>
+      
+      <div className="flex-1 py-4">
+        <NavItem icon={<LayoutDashboard className="w-5 h-5" />} label="Dashboard" active={activeView === 'dashboard'} onClick={() => onNavigate('dashboard')} />
+        <NavItem icon={<BookOpen className="w-5 h-5" />} label="My Learning" active={activeView === 'learning'} onClick={() => onNavigate('dashboard')} />
+        <NavItem icon={<FileText className="w-5 h-5" />} label="Assignments" />
+        <NavItem icon={<Library className="w-5 h-5" />} label="Library" />
+        <NavItem icon={<Settings className="w-5 h-5" />} label="Settings" />
+      </div>
+      
+      <div className="p-6">
+        <button className="w-full py-3 bg-[#F5A623] text-gray-900 font-bold rounded-lg shadow-sm hover:bg-[#E0931B] transition-colors">
+          Start Studying
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function NavItem({ icon, label, active, onClick }) {
+  return (
+    <div 
+      onClick={onClick}
+      className={`flex items-center px-6 py-3 cursor-pointer border-l-4 transition-colors ${
+        active 
+          ? 'border-orange-400 bg-orange-50 text-orange-600' 
+          : 'border-transparent text-gray-500 hover:bg-gray-50 hover:text-gray-800'
+      }`}
+    >
+      <div className="mr-3">{icon}</div>
+      <span className="font-medium text-sm">{label}</span>
     </div>
   );
 }
@@ -350,7 +534,6 @@ function ChapterListView({ subject, profile, onSelectChapter, onBack }) {
         <Sidebar activeView="learning" onNavigate={onBack} />
         
         <div className="flex-1 flex overflow-hidden">
-          {/* Chapter Sidebar */}
           <div className="w-80 border-r border-gray-100 bg-white flex flex-col h-[calc(100vh-77px)] shrink-0 overflow-y-auto">
             <div className="p-6 border-b border-gray-100">
               <button onClick={onBack} className="flex items-center text-sm text-gray-500 hover:text-gray-900 mb-4 transition-colors">
@@ -387,7 +570,6 @@ function ChapterListView({ subject, profile, onSelectChapter, onBack }) {
             </div>
           </div>
 
-          {/* Chapter Detail Main */}
           <div className="flex-1 p-8 md:p-12 overflow-y-auto bg-[#FAFAF8] flex items-center justify-center">
             {activeChapter && (
               <div className="max-w-2xl w-full bg-white rounded-3xl p-10 border border-gray-100 shadow-sm text-center">
@@ -441,7 +623,6 @@ function ReaderView({ subject, chapter, profile, onBack }) {
     <div className="min-h-screen flex flex-col bg-[#FAFAF8]">
       <TopNav />
       
-      {/* Breadcrumbs */}
       <div className="bg-white border-b border-gray-100 px-8 py-4 flex items-center gap-3 text-sm text-gray-500 sticky top-[77px] z-40">
         <button onClick={onBack} className="hover:text-gray-900 transition-colors flex items-center gap-1">
           <ArrowLeft className="w-4 h-4" /> Back to Curriculum
