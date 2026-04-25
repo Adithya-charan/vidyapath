@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import { Globe, Bell, LayoutDashboard, BookOpen, FileText, Library, Settings, Plus, MessageSquare, ArrowLeft, CheckCircle2, Circle, Star, ArrowRight, ShieldCheck, Mail, Share2, Award, Zap, Compass, Monitor, Video, Send, Loader2, RefreshCw } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import axios from 'axios';
+
+// Assets
+import leafVideo from './assets/Leaf_And_Sun_Animation_Generation.mp4';
+import plantVideo from './assets/Animated_Happy_Potted_Plant_Video.mp4';
 
 // ===== DATA =====
 const SUBJECTS = [
@@ -22,9 +25,9 @@ const SCIENCE_CHAPTERS = [
 
 const CHAPTER_1_CONTENT = [
   { type: "text", content: "All living organisms require food. Plants are the only organisms that can prepare their own food. They do this through a process called photosynthesis. In this process, plants use sunlight, water, and carbon dioxide to make glucose — their primary source of energy." },
-  { type: "avatar_video", topic: "How Plants Make Food", video: "https://www.w3schools.com/html/mov_bbb.mp4", thumbnail: "https://placehold.co/640x360/F5A623/FFFFFF?text=AI+Teacher+▶", languages: ["English", "Hindi", "Sanskrit"] },
+  { type: "avatar_video", topic: "How Plants Make Food", video: leafVideo, thumbnail: "https://placehold.co/640x360/F5A623/FFFFFF?text=AI+Teacher+▶", languages: ["English", "Hindi", "Sanskrit"] },
   { type: "text", content: "Photosynthesis takes place mainly in the leaves of plants. Leaves have a green pigment called chlorophyll, which absorbs sunlight. The leaves also have tiny pores called stomata through which carbon dioxide enters the plant." },
-  { type: "cartoon_video", topic: "Journey of Water in a Plant", video: "https://www.w3schools.com/html/mov_bbb.mp4", thumbnail: "https://placehold.co/640x480/2E7D52/FFFFFF?text=🎨+Visual+Story+▶", languages: ["English", "Hindi", "Sanskrit"] },
+  { type: "cartoon_video", topic: "Journey of Water in a Plant", video: plantVideo, thumbnail: "https://placehold.co/640x480/2E7D52/FFFFFF?text=🎨+Visual+Story+▶", languages: ["English", "Hindi", "Sanskrit"] },
   { type: "text", content: "Plants are called autotrophs because they produce their own food. Animals and humans are called heterotrophs because they depend on plants or other animals for food." }
 ];
 
@@ -42,26 +45,28 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#FCFAEF] font-sans text-gray-900 selection:bg-orange-200">
-      {view === 'landing' && <FullLandingView onGetStarted={() => navigateTo('registration')} />}
-      
+      {view === 'landing' && <FullLandingView onGetStarted={() => navigateTo('registration')} profile={profile} setProfile={setProfile} />}
+
       {view === 'registration' && <RegistrationView onComplete={() => navigateTo('dashboard')} profile={profile} setProfile={setProfile} />}
-      
+
       {view === 'dashboard' && (
-        <DashboardView 
+        <DashboardView
           profile={profile}
+          setProfile={setProfile}
           onSelectSubject={(subj) => {
             setActiveSubject(subj);
             navigateTo('chapterList');
           }} 
-          onNavigate={navigateTo}
         />
       )}
 
       {view === 'chapterList' && activeSubject && (
-        <ChapterListView 
+        <ChapterListView
           subject={activeSubject}
           profile={profile}
+          setProfile={setProfile}
           onBack={() => navigateTo('dashboard')}
+          onNavigate={navigateTo}
           onSelectChapter={(chap) => {
             setActiveChapter(chap);
             navigateTo('reader');
@@ -70,11 +75,20 @@ export default function App() {
         />
       )}
 
+      {view === 'aiteacher' && (
+        <AITeacherView
+          profile={profile}
+          setProfile={setProfile}
+          onNavigate={navigateTo}
+        />
+      )}
+
       {view === 'reader' && activeSubject && activeChapter && (
-        <ReaderView 
+        <ReaderView
           subject={activeSubject}
           chapter={activeChapter}
           profile={profile}
+          setProfile={setProfile}
           onBack={() => navigateTo('chapterList')}
           onNavigate={navigateTo}
         />
@@ -93,17 +107,33 @@ export default function App() {
 
 // ===== COMPONENTS =====
 
-function TopNav() {
+function TopNav({ profile, setProfile }) {
+  const language = profile?.language || 'English';
+  const t = TRANSLATIONS[language] || TRANSLATIONS['English'];
+
   return (
     <nav className="flex items-center justify-between px-8 py-5 bg-white border-b border-gray-100 sticky top-0 z-50">
       <div className="font-bold text-2xl font-serif tracking-tight">VidyaPath</div>
       <div className="hidden md:flex space-x-8 text-sm font-medium text-gray-600">
-        <a href="#" className="text-orange-500 border-b-2 border-orange-500 pb-1">Courses</a>
-        <a href="#" className="hover:text-gray-900">Library</a>
-        <a href="#" className="hover:text-gray-900">Mentors</a>
+        <a href="#" className="text-orange-500 border-b-2 border-orange-500 pb-1">{t.courses}</a>
+        <a href="#" className="hover:text-gray-900">{t.library}</a>
+        <a href="#" className="hover:text-gray-900">{t.mentors}</a>
       </div>
       <div className="flex items-center space-x-5 text-gray-600">
-        <Globe className="w-5 h-5 cursor-pointer hover:text-gray-900 transition-colors" />
+        <div className="relative group cursor-pointer inline-block pt-1 pb-1">
+          <Globe className="w-5 h-5 hover:text-gray-900 transition-colors relative z-10" />
+          <div className="absolute right-0 mt-2 w-32 bg-white rounded-md shadow-lg border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 overflow-hidden">
+            {['English', 'Hindi', 'Sanskrit'].map(lang => (
+              <div
+                key={lang}
+                onClick={() => setProfile && setProfile({ ...profile, language: lang })}
+                className={`px-4 py-3 text-sm cursor-pointer hover:bg-orange-50 ${language === lang ? 'font-bold text-orange-600 bg-orange-50/50' : 'text-gray-700'}`}
+              >
+                {lang}
+              </div>
+            ))}
+          </div>
+        </div>
         <Bell className="w-5 h-5 cursor-pointer hover:text-gray-900 transition-colors" />
         <div className="w-8 h-8 rounded-full bg-blue-100 overflow-hidden border border-gray-200 cursor-pointer">
           <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="Profile" />
@@ -115,32 +145,35 @@ function TopNav() {
 
 // ===== VIEWS =====
 
-function FullLandingView({ onGetStarted }) {
+function FullLandingView({ onGetStarted, profile, setProfile }) {
+  const language = profile?.language || 'English';
+  const t = TRANSLATIONS[language] || TRANSLATIONS['English'];
+
   return (
     <div className="min-h-screen bg-[#FAFAF8]">
-      <TopNav />
-      
+      <TopNav profile={profile} setProfile={setProfile} />
+
       {/* Hero Section */}
       <section className="max-w-7xl mx-auto px-8 py-16 lg:py-24 flex flex-col lg:flex-row items-center justify-between">
         <div className="lg:w-1/2 pr-12 mb-16 lg:mb-0">
           <div className="inline-block px-4 py-1.5 bg-green-100 text-green-700 text-xs font-bold tracking-wider rounded-full mb-8">
-            NEW ACADEMIC YEAR 2024
+            {t.newYear}
           </div>
           <h1 className="text-5xl lg:text-7xl font-serif font-bold text-gray-900 leading-[1.1] mb-6">
-            Where <span className="text-[#F5A623]">Tradition</span> Meets Digital <span className="relative inline-block border-b-4 border-green-600">Excellence</span>
+            {t.titleLines[0]} <span className="text-[#F5A623]">{t.titleLines[1]}</span> {t.titleLines[2]} <span className="relative inline-block border-b-4 border-green-600">{t.titleLines[3]}</span>
           </h1>
           <p className="text-gray-600 text-lg leading-relaxed mb-10 max-w-lg">
-            Bridge the gap between timeless academic wisdom and the modern digital landscape. A focused sanctuary for scholars, learners, and dreamers.
+            {t.subtitle}
           </p>
           <div className="flex items-center space-x-4">
-            <button 
+            <button
               onClick={onGetStarted}
               className="px-8 py-3.5 bg-[#F5A623] hover:bg-[#E0931B] text-gray-900 font-bold text-lg rounded-lg shadow-sm hover:shadow-md transition-all"
             >
-              Get Started
+              {t.getStarted}
             </button>
-            <button className="px-8 py-3.5 bg-white border border-gray-300 hover:border-gray-400 text-gray-700 font-bold text-lg rounded-lg shadow-sm transition-all">
-              Explore Courses
+            <button className="px-8 py-3.5 bg-white border border-gray-300 hover:border-gray-400 text-gray-700 font-bold text-lg rounded-lg shadow-sm transition-all hidden sm:block">
+              {t.exploreCourses}
             </button>
           </div>
         </div>
@@ -152,26 +185,13 @@ function FullLandingView({ onGetStarted }) {
             </div>
             <div>
               <div className="font-bold text-gray-900">4.9/5</div>
-              <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">TRUSTED BY 20K+ STUDENTS</div>
+              <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{t.trusted}</div>
             </div>
           </div>
-          
-          <div className="w-full max-w-[500px] aspect-square bg-[#224A51] rounded-2xl relative overflow-hidden shadow-2xl flex items-center justify-center p-8">
-            {/* Abstract mock UI graphic matching screenshot */}
-            <div className="w-full h-full border border-white/20 rounded-xl relative">
-               <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                 <div className="w-32 h-32 rounded-full border-2 border-[#4A7D86] flex items-center justify-center relative">
-                    <div className="w-20 h-20 rounded-full border-2 border-white flex items-center justify-center">
-                       <Monitor className="w-8 h-8 text-white opacity-50" />
-                    </div>
-                    <div className="absolute -top-10 left-1/2 w-8 h-8 bg-white/10 rounded-full"></div>
-                    <div className="absolute top-1/2 -left-10 w-8 h-8 bg-white/10 rounded-full"></div>
-                 </div>
-               </div>
-               <div className="absolute bottom-8 right-8 px-6 py-2 bg-[#0D2428] text-white font-bold tracking-widest text-sm rounded-lg border border-white/10">
-                 SAFE FOR WORK
-               </div>
-            </div>
+
+          <div className="w-full max-w-[500px] aspect-square rounded-2xl relative overflow-hidden shadow-2xl">
+            <img src={heroImage} alt="Students studying together" className="w-full h-full object-cover" />
+            <div className="absolute inset-0 ring-1 ring-inset ring-black/10 rounded-2xl"></div>
           </div>
         </div>
       </section>
@@ -181,10 +201,10 @@ function FullLandingView({ onGetStarted }) {
         <div className="max-w-7xl mx-auto px-8">
           <h3 className="text-center text-xs font-bold tracking-widest text-gray-400 uppercase mb-8">Our Academic Partners</h3>
           <div className="flex flex-wrap justify-center items-center gap-12 md:gap-24 opacity-60 grayscale">
-            <div className="flex items-center space-x-2"><BookOpen className="w-6 h-6"/> <span className="font-serif text-xl font-bold">Stanford</span></div>
-            <div className="flex items-center space-x-2"><ShieldCheck className="w-6 h-6"/> <span className="font-serif text-xl font-bold">Oxford</span></div>
-            <div className="flex items-center space-x-2"><Award className="w-6 h-6"/> <span className="font-serif text-xl font-bold">Heritage</span></div>
-            <div className="flex items-center space-x-2"><Library className="w-6 h-6"/> <span className="font-serif text-xl font-bold">Library</span></div>
+            <div className="flex items-center space-x-2"><BookOpen className="w-6 h-6" /> <span className="font-serif text-xl font-bold">Stanford</span></div>
+            <div className="flex items-center space-x-2"><ShieldCheck className="w-6 h-6" /> <span className="font-serif text-xl font-bold">Oxford</span></div>
+            <div className="flex items-center space-x-2"><Award className="w-6 h-6" /> <span className="font-serif text-xl font-bold">Heritage</span></div>
+            <div className="flex items-center space-x-2"><Library className="w-6 h-6" /> <span className="font-serif text-xl font-bold">Library</span></div>
           </div>
         </div>
       </section>
@@ -268,7 +288,7 @@ function FullLandingView({ onGetStarted }) {
             <p className="text-gray-800 text-lg mb-10 opacity-90">
               Join thousands of students who have rediscovered the joy of deep, focused learning with VidyaPath.
             </p>
-            <button 
+            <button
               onClick={onGetStarted}
               className="px-10 py-4 bg-[#1A1A2E] hover:bg-black text-white font-bold text-lg rounded-full shadow-lg hover:shadow-xl transition-all"
             >
@@ -287,7 +307,7 @@ function FullLandingView({ onGetStarted }) {
               Empowering students through the harmony of traditional pedagogy and modern technological tools.
             </p>
           </div>
-          
+
           <div className="flex gap-16 md:gap-32">
             <div>
               <h5 className="font-bold text-xs text-gray-500 uppercase tracking-wider mb-6">Platform</h5>
@@ -318,59 +338,61 @@ function FullLandingView({ onGetStarted }) {
 
 function RegistrationView({ onComplete, profile, setProfile }) {
   const languages = ['English', 'Hindi', 'Sanskrit'];
+  const language = profile?.language || 'English';
+  const t = TRANSLATIONS[language] || TRANSLATIONS['English'];
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FDFCF8] relative overflow-hidden">
       <div className="absolute top-20 left-10 w-24 h-24 border-8 border-orange-100 rounded-full opacity-50"></div>
-      
-      <TopNav />
-      
+
+      <TopNav profile={profile} setProfile={setProfile} />
+
       <main className="flex-1 max-w-7xl mx-auto w-full px-8 py-12 flex flex-col lg:flex-row items-center justify-center z-10">
-        
+
         <div className="w-full max-w-md">
-          <button 
-            onClick={() => window.location.reload()} 
+          <button
+            onClick={() => window.location.reload()}
             className="flex items-center text-sm text-gray-500 hover:text-gray-900 mb-6 transition-colors"
           >
-            <ArrowLeft className="w-4 h-4 mr-1" /> Back to Home
+            <ArrowLeft className="w-4 h-4 mr-1" /> {t.backHome}
           </button>
           <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 sm:p-10 relative">
-            <h2 className="text-3xl font-serif font-bold text-center mb-2">Create Your Profile</h2>
-            <p className="text-center text-gray-500 text-sm mb-8">Join the community of lifelong learners.</p>
-            
+            <h2 className="text-3xl font-serif font-bold text-center mb-2">{t.createProfile}</h2>
+            <p className="text-center text-gray-500 text-sm mb-8">{t.joinCommunity}</p>
+
             <form onSubmit={(e) => { e.preventDefault(); onComplete(); }} className="space-y-5">
               <div>
-                <label className="block text-sm text-gray-700 mb-1.5">Full Name</label>
-                <input 
-                  type="text" 
+                <label className="block text-sm text-gray-700 mb-1.5">{t.fullName}</label>
+                <input
+                  type="text"
                   value={profile.name}
-                  onChange={e => setProfile({...profile, name: e.target.value})}
+                  onChange={e => setProfile({ ...profile, name: e.target.value })}
                   className="w-full px-4 py-3 bg-gray-50 rounded-lg border-transparent focus:bg-white focus:border-gray-300 focus:ring-2 focus:ring-orange-200 outline-none transition-all text-sm"
-                  placeholder="Enter your full name"
+                  placeholder={t.enterName}
                   required
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm text-gray-700 mb-1.5">Class</label>
-                  <select 
+                  <label className="block text-sm text-gray-700 mb-1.5">{t.className}</label>
+                  <select
                     value={profile.class}
-                    onChange={e => setProfile({...profile, class: e.target.value})}
+                    onChange={e => setProfile({ ...profile, class: e.target.value })}
                     className="w-full px-4 py-3 bg-gray-50 rounded-lg border-transparent focus:bg-white focus:border-gray-300 outline-none text-sm text-gray-700 appearance-none"
                   >
-                    <option value="">Select Class</option>
-                    {[...Array(12)].map((_, i) => <option key={i} value={i+1}>Class {i+1}</option>)}
+                    <option value="">{t.selectClass}</option>
+                    {[...Array(12)].map((_, i) => <option key={i} value={i + 1}>{t.className} {i + 1}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm text-gray-700 mb-1.5">Board</label>
-                  <select 
+                  <label className="block text-sm text-gray-700 mb-1.5">{t.board}</label>
+                  <select
                     value={profile.board}
-                    onChange={e => setProfile({...profile, board: e.target.value})}
+                    onChange={e => setProfile({ ...profile, board: e.target.value })}
                     className="w-full px-4 py-3 bg-gray-50 rounded-lg border-transparent focus:bg-white focus:border-gray-300 outline-none text-sm text-gray-700 appearance-none"
                   >
-                    <option value="">Select Board</option>
+                    <option value="">{t.selectBoard}</option>
                     <option>CBSE</option>
                     <option>ICSE</option>
                     <option>State Board</option>
@@ -379,18 +401,17 @@ function RegistrationView({ onComplete, profile, setProfile }) {
               </div>
 
               <div>
-                <label className="block text-sm text-gray-700 mb-2">Preferred Language</label>
+                <label className="block text-sm text-gray-700 mb-2">{t.preferredLanguage}</label>
                 <div className="flex space-x-3">
                   {languages.map(lang => (
                     <button
                       key={lang}
                       type="button"
-                      onClick={() => setProfile({...profile, language: lang})}
-                      className={`flex-1 py-2.5 rounded-lg text-sm border transition-all ${
-                        profile.language === lang 
-                          ? 'border-orange-400 bg-orange-50 text-orange-800 font-medium' 
-                          : 'border-gray-200 bg-white text-gray-600 hover:bg-gray-50'
-                      }`}
+                      onClick={() => setProfile({ ...profile, language: lang })}
+                      className={`flex-1 py-2.5 rounded-lg text-sm border transition-all ${profile.language === lang
+                        ? 'border-orange-400 bg-orange-50 text-orange-800 font-medium'
+                        : 'border-gray-200 bg-white text-gray-600 hover:bg-gray-50'
+                        }`}
                     >
                       {lang}
                     </button>
@@ -398,11 +419,11 @@ function RegistrationView({ onComplete, profile, setProfile }) {
                 </div>
               </div>
 
-              <button 
+              <button
                 type="submit"
                 className="w-full mt-4 bg-[#F5A623] hover:bg-[#E0931B] text-gray-900 font-bold text-lg py-4 rounded-xl shadow-lg hover:shadow-xl transition-all flex justify-center items-center gap-2"
               >
-                Begin Learning →
+                {t.beginLearning} →
               </button>
             </form>
           </div>
@@ -412,26 +433,28 @@ function RegistrationView({ onComplete, profile, setProfile }) {
   );
 }
 
-function Sidebar({ activeView, onNavigate }) {
+function Sidebar({ activeView, onNavigate, profile }) {
+  const language = profile?.language || 'English';
+  const t = TRANSLATIONS[language] || TRANSLATIONS['English'];
+
   return (
     <div className="w-[240px] bg-white border-r border-gray-100 flex flex-col hidden md:flex shrink-0 h-[calc(100vh-77px)] sticky top-[77px]">
       <div className="p-6">
         <h2 className="font-serif font-bold text-lg text-gray-900">VidyaPath</h2>
-        <p className="text-[10px] font-bold tracking-widest text-gray-400 uppercase mt-1">Student Portal</p>
+        <p className="text-[10px] font-bold tracking-widest text-gray-400 uppercase mt-1">{t.studentPortal}</p>
       </div>
-      
+
       <div className="flex-1 py-4">
         <NavItem icon={<LayoutDashboard className="w-5 h-5" />} label="Dashboard" active={activeView === 'dashboard'} onClick={() => onNavigate('dashboard')} />
         <NavItem icon={<BookOpen className="w-5 h-5" />} label="My Learning" active={activeView === 'learning'} onClick={() => onNavigate('dashboard')} />
-        <NavItem icon={<Video className="w-5 h-5" />} label="AI Teacher" active={activeView === 'aiteacher'} onClick={() => onNavigate('aiteacher')} />
         <NavItem icon={<FileText className="w-5 h-5" />} label="Assignments" />
         <NavItem icon={<Library className="w-5 h-5" />} label="Library" />
         <NavItem icon={<Settings className="w-5 h-5" />} label="Settings" />
       </div>
-      
+
       <div className="p-6">
         <button className="w-full py-3 bg-[#F5A623] text-gray-900 font-bold rounded-lg shadow-sm hover:bg-[#E0931B] transition-colors">
-          Start Studying
+          {t.startStudying}
         </button>
       </div>
     </div>
@@ -440,13 +463,12 @@ function Sidebar({ activeView, onNavigate }) {
 
 function NavItem({ icon, label, active, onClick }) {
   return (
-    <div 
+    <div
       onClick={onClick}
-      className={`flex items-center px-6 py-3 cursor-pointer border-l-4 transition-colors ${
-        active 
-          ? 'border-orange-400 bg-orange-50 text-orange-600' 
-          : 'border-transparent text-gray-500 hover:bg-gray-50 hover:text-gray-800'
-      }`}
+      className={`flex items-center px-6 py-3 cursor-pointer border-l-4 transition-colors ${active
+        ? 'border-orange-400 bg-orange-50 text-orange-600'
+        : 'border-transparent text-gray-500 hover:bg-gray-50 hover:text-gray-800'
+        }`}
     >
       <div className="mr-3">{icon}</div>
       <span className="font-medium text-sm">{label}</span>
@@ -454,27 +476,27 @@ function NavItem({ icon, label, active, onClick }) {
   );
 }
 
-function DashboardView({ profile, onSelectSubject, onNavigate }) {
+function DashboardView({ profile, onSelectSubject }) {
   const name = profile.name || 'Arjun';
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FAFAF8]">
-      <TopNav />
+      <TopNav profile={profile} setProfile={setProfile} />
       <div className="flex flex-1">
-        <Sidebar activeView="dashboard" onNavigate={onNavigate} />
+        <Sidebar activeView="dashboard" onNavigate={() => {}} />
         
         <div className="flex-1 overflow-y-auto p-8 relative">
           <div className="bg-white rounded-2xl border border-gray-100 p-8 shadow-sm flex flex-col md:flex-row items-center justify-between mb-10">
             <div className="max-w-xl">
               <div className="inline-block px-3 py-1 bg-green-200 text-green-800 text-xs font-medium rounded-full mb-4">
-                Daily Goal: 80% Complete
+                {t.dailyGoal}
               </div>
-              <h1 className="text-4xl font-serif font-bold text-gray-900 mb-3">Welcome back, {name}!</h1>
+              <h1 className="text-4xl font-serif font-bold text-gray-900 mb-3">{t.welcomeBack}, {name}!</h1>
               <p className="text-gray-600 text-lg">
-                You've mastered 3 new concepts in <span className="font-bold text-green-700">Science</span> this week. Keep up the scholarly pace!
+                {t.masteredConcepts} <span className="font-bold text-green-700">Science</span> {t.keepPace}
               </p>
             </div>
-            
+
             <div className="mt-6 md:mt-0 flex-shrink-0 relative w-32 h-32 flex items-center justify-center">
               <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
                 <path className="text-gray-100" strokeWidth="4" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
@@ -482,22 +504,22 @@ function DashboardView({ profile, onSelectSubject, onNavigate }) {
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
                 <span className="text-2xl font-bold text-gray-900">72%</span>
-                <span className="text-[10px] font-bold text-gray-500 uppercase">Weekly</span>
+                <span className="text-[10px] font-bold text-gray-500 uppercase">{t.weekly}</span>
               </div>
             </div>
           </div>
 
           <div className="flex justify-between items-end mb-6">
-            <h2 className="text-3xl font-serif font-bold text-gray-900">Your Subjects</h2>
+            <h2 className="text-3xl font-serif font-bold text-gray-900">{t.yourSubjects}</h2>
             <button className="text-sm font-medium text-amber-700 hover:text-amber-800 flex items-center">
-              View curriculum <span className="ml-1">→</span>
+              {t.viewCurriculum} <span className="ml-1">→</span>
             </button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {SUBJECTS.map((sub, i) => (
-              <div 
-                key={i} 
+            {getData(profile?.language).SUBJECTS.map((sub, i) => (
+              <div
+                key={i}
                 onClick={() => onSelectSubject(sub)}
                 className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition-all cursor-pointer hover:-translate-y-1"
               >
@@ -506,27 +528,27 @@ function DashboardView({ profile, onSelectSubject, onNavigate }) {
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-2">{sub.title}</h3>
                 <p className="text-sm text-gray-500 mb-8 min-h-[40px]">{sub.desc}</p>
-                
+
                 <div>
                   <div className="flex justify-between text-sm font-medium text-gray-700 mb-2">
-                    <span>Mastery</span>
+                    <span>{t.mastery}</span>
                     <span>{sub.progress}%</span>
                   </div>
                   <div className="w-full bg-gray-100 rounded-full h-2 mb-3 overflow-hidden">
                     <div className="bg-green-700 h-2 rounded-full transition-all duration-1000" style={{ width: `${sub.progress}%` }}></div>
                   </div>
                   <div className="text-[10px] font-bold text-green-700 uppercase tracking-wide">
-                    {sub.modules} Modules Completed
+                    {sub.modules} {t.modulesCompleted}
                   </div>
                 </div>
               </div>
             ))}
-            
+
             <div className="rounded-2xl border-2 border-dashed border-gray-200 p-6 flex flex-col items-center justify-center text-gray-400 hover:text-gray-600 hover:border-gray-300 hover:bg-gray-50 cursor-pointer transition-all min-h-[250px]">
               <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mb-3">
                 <Plus className="w-6 h-6" />
               </div>
-              <span className="font-medium text-sm">Enroll in New Subject</span>
+              <span className="font-medium text-sm">{t.enrollNewSubject}</span>
             </div>
           </div>
         </div>
@@ -535,50 +557,52 @@ function DashboardView({ profile, onSelectSubject, onNavigate }) {
   );
 }
 
-function ChapterListView({ subject, profile, onSelectChapter, onBack, onNavigate }) {
+function ChapterListView({ subject, profile, onSelectChapter, onBack }) {
   const chapters = subject.id === 'science' ? SCIENCE_CHAPTERS : [];
   const [activeId, setActiveId] = useState(1);
   const activeChapter = chapters.find(c => c.id === activeId);
 
+  const language = profile?.language || 'English';
+  const t = TRANSLATIONS[language] || TRANSLATIONS['English'];
+
   return (
     <div className="min-h-screen flex flex-col bg-[#FAFAF8]">
-      <TopNav />
+      <TopNav profile={profile} setProfile={setProfile} />
       <div className="flex flex-1 overflow-hidden">
-        <Sidebar activeView="learning" onNavigate={onNavigate} />
+        <Sidebar activeView="learning" onNavigate={onBack} />
         
         <div className="flex-1 flex overflow-hidden">
           <div className="w-80 border-r border-gray-100 bg-white flex flex-col h-[calc(100vh-77px)] shrink-0 overflow-y-auto">
             <div className="p-6 border-b border-gray-100">
               <button onClick={onBack} className="flex items-center text-sm text-gray-500 hover:text-gray-900 mb-4 transition-colors">
-                <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                <ArrowLeft className="w-4 h-4 mr-1" /> {t.back}
               </button>
               <div className="flex items-center gap-3">
-                <div className={`w-10 h-10 rounded-lg ${subject.iconBg} flex items-center justify-center text-xl`}>
-                  {subject.icon}
+                <div className={`w-10 h-10 rounded-lg ${localizedSubject.iconBg} flex items-center justify-center text-xl`}>
+                  {localizedSubject.icon}
                 </div>
-                <h2 className="text-2xl font-serif font-bold text-gray-900">{subject.title}</h2>
+                <h2 className="text-2xl font-serif font-bold text-gray-900">{localizedSubject.title}</h2>
               </div>
             </div>
-            
+
             <div className="p-4 space-y-2">
               {chapters.length > 0 ? chapters.map(chap => (
-                <div 
+                <div
                   key={chap.id}
                   onClick={() => setActiveId(chap.id)}
-                  className={`p-4 rounded-xl cursor-pointer border transition-all flex items-center gap-3 ${
-                    activeId === chap.id ? 'bg-orange-50 border-orange-200' : 'bg-white border-transparent hover:bg-gray-50'
-                  }`}
+                  className={`p-4 rounded-xl cursor-pointer border transition-all flex items-center gap-3 ${activeId === chap.id ? 'bg-orange-50 border-orange-200' : 'bg-white border-transparent hover:bg-gray-50'
+                    }`}
                 >
                   {chap.done ? <CheckCircle2 className="w-5 h-5 text-green-600 shrink-0" /> : <Circle className="w-5 h-5 text-gray-300 shrink-0" />}
                   <div>
                     <div className={`font-medium text-sm ${activeId === chap.id ? 'text-orange-900' : 'text-gray-700'}`}>
-                      Ch {chap.id}: {chap.title}
+                      {t.chapterText} {chap.id}: {chap.title}
                     </div>
-                    <div className="text-xs text-gray-500 mt-1">{chap.topics} Topics</div>
+                    <div className="text-xs text-gray-500 mt-1">{chap.topics} {t.topics}</div>
                   </div>
                 </div>
               )) : (
-                <p className="text-center text-gray-400 text-sm py-10">Curriculum generating...</p>
+                <p className="text-center text-gray-400 text-sm py-10">{t.generatingCurriculum}</p>
               )}
             </div>
           </div>
@@ -587,18 +611,18 @@ function ChapterListView({ subject, profile, onSelectChapter, onBack, onNavigate
             {activeChapter && (
               <div className="max-w-2xl w-full bg-white rounded-3xl p-10 border border-gray-100 shadow-sm text-center">
                 <div className="inline-block px-4 py-1.5 bg-green-100 text-green-800 text-xs font-bold rounded-full mb-6 uppercase tracking-wider">
-                  Chapter {activeChapter.id}
+                  {t.chapterText} {activeChapter.id}
                 </div>
                 <h1 className="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-6 leading-tight">
                   {activeChapter.title}
                 </h1>
-                
+
                 <div className="flex items-center justify-center gap-3 text-gray-500 text-sm mb-10">
-                  <span>{activeChapter.topics} Topics</span>
+                  <span>{activeChapter.topics} {t.topics}</span>
                   <span>•</span>
-                  <span>~15 min read</span>
+                  <span>~15 {t.minRead}</span>
                   <span>•</span>
-                  <span className="flex items-center gap-1"><Globe className="w-4 h-4"/> {profile.language}</span>
+                  <span className="flex items-center gap-1"><Globe className="w-4 h-4" /> {profile.language}</span>
                 </div>
 
                 <div className="flex flex-wrap justify-center gap-2 mb-12">
@@ -609,11 +633,11 @@ function ChapterListView({ subject, profile, onSelectChapter, onBack, onNavigate
                   ))}
                 </div>
 
-                <button 
+                <button
                   onClick={() => onSelectChapter(activeChapter)}
                   className="mx-auto px-8 py-4 bg-[#F5A623] hover:bg-[#E0931B] text-gray-900 font-bold text-lg rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex justify-center items-center gap-3"
                 >
-                  Start Reading →
+                  {t.startReading} →
                 </button>
               </div>
             )}
@@ -624,8 +648,15 @@ function ChapterListView({ subject, profile, onSelectChapter, onBack, onNavigate
   );
 }
 
-function ReaderView({ subject, chapter, profile, onBack, onNavigate }) {
+function ReaderView({ subject, chapter, profile, onBack }) {
   const [completed, setCompleted] = useState(false);
+
+  const language = profile?.language || 'English';
+  const t = TRANSLATIONS[language] || TRANSLATIONS['English'];
+
+  const { CHAPTER_1_CONTENT, SCIENCE_CHAPTERS, SUBJECTS } = getData(language);
+  const localizedSubject = SUBJECTS.find(s => s.id === subject.id) || subject;
+  const localizedChapter = SCIENCE_CHAPTERS.find(c => c.id === chapter.id) || chapter;
 
   const handleComplete = () => {
     setCompleted(true);
@@ -634,21 +665,21 @@ function ReaderView({ subject, chapter, profile, onBack, onNavigate }) {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FAFAF8]">
-      <TopNav />
-      
+      <TopNav profile={profile} setProfile={setProfile} />
+
       <div className="bg-white border-b border-gray-100 px-8 py-4 flex items-center gap-3 text-sm text-gray-500 sticky top-[77px] z-40">
         <button onClick={onBack} className="hover:text-gray-900 transition-colors flex items-center gap-1">
-          <ArrowLeft className="w-4 h-4" /> Back to Curriculum
+          <ArrowLeft className="w-4 h-4" /> {t.backCurriculum}
         </button>
         <span>/</span>
-        <span>{subject.title}</span>
+        <span>{localizedSubject.title}</span>
         <span>/</span>
-        <span className="text-gray-900 font-bold">Ch {chapter.id}: {chapter.title}</span>
+        <span className="text-gray-900 font-bold">{t.chapterText} {localizedChapter.id}: {localizedChapter.title}</span>
       </div>
 
       <div className="flex-1 max-w-5xl mx-auto w-full p-8 md:p-12">
         <h1 className="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-12 text-center">
-          {chapter.title}
+          {localizedChapter.title}
         </h1>
 
         <div className="space-y-12">
@@ -670,11 +701,11 @@ function ReaderView({ subject, chapter, profile, onBack, onNavigate }) {
                     </span>
                   </div>
                   <h3 className="text-2xl font-bold text-gray-900 mb-4">{block.topic}</h3>
-                  
+
                   <div className="relative rounded-xl overflow-hidden aspect-video bg-gray-100 mb-6 border border-gray-100 shadow-inner">
                     {block.video ? (
-                      <video 
-                        src={block.video} 
+                      <video
+                        src={block.video}
                         className="w-full h-full object-cover"
                         controls
                         autoPlay
@@ -689,13 +720,12 @@ function ReaderView({ subject, chapter, profile, onBack, onNavigate }) {
 
                   <div className="flex gap-2">
                     {block.languages.map(lang => (
-                      <button 
+                      <button
                         key={lang}
-                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                          lang === profile.language 
-                            ? 'bg-orange-100 text-orange-800 border-orange-200 border' 
-                            : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
-                        }`}
+                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${lang === profile.language
+                          ? 'bg-orange-100 text-orange-800 border-orange-200 border'
+                          : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
+                          }`}
                       >
                         {lang}
                       </button>
@@ -709,242 +739,18 @@ function ReaderView({ subject, chapter, profile, onBack, onNavigate }) {
 
           <div className="pt-12 pb-24">
             {!completed ? (
-              <button 
+              <button
                 onClick={handleComplete}
                 className="w-full py-6 rounded-2xl border-2 border-dashed border-gray-300 hover:border-green-500 hover:bg-green-50 text-gray-500 hover:text-green-700 font-bold text-xl transition-all flex items-center justify-center gap-3"
               >
-                Mark Chapter as Complete <CheckCircle2 className="w-6 h-6" />
+                {t.markComplete} <CheckCircle2 className="w-6 h-6" />
               </button>
             ) : (
               <div className="w-full py-8 bg-green-100 rounded-2xl text-green-800 font-bold text-2xl flex flex-col items-center justify-center gap-2 border border-green-200">
                 <CheckCircle2 className="w-10 h-10 text-green-600" />
-                <span>Chapter Complete! Excellent work.</span>
+                <span>{t.chapterComplete}</span>
               </div>
             )}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function AITeacherView({ profile, onBack, onNavigate }) {
-  const [subject, setSubject] = useState("");
-  const [topic, setTopic] = useState("");
-  const [language, setLanguage] = useState(profile.language || "English");
-  const [videoData, setVideoData] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [doubt, setDoubt] = useState("");
-  const [doubtAnswer, setDoubtAnswer] = useState(null);
-  const [doubtLoading, setDoubtLoading] = useState(false);
-  const [interactiveMode, setInteractiveMode] = useState(true);
-
-  const generateVideo = async (difficulty = "standard") => {
-    if (!subject || !topic) return alert("Please select a subject and topic");
-    setLoading(true);
-    setVideoData(null);
-    setDoubtAnswer(null);
-    try {
-      const res = await axios.post("http://localhost:8000/api/generate-video", {
-        topic: `${subject} - ${topic}`,
-        language: language,
-        difficulty: difficulty
-      });
-      setVideoData(res.data);
-    } catch (e) {
-      alert("Failed to generate video: " + e.message);
-    }
-    setLoading(false);
-  };
-
-  const askDoubt = async () => {
-    if (!doubt) return;
-    setDoubtLoading(true);
-    try {
-      const res = await axios.post("http://localhost:8000/api/ask-doubt", {
-        topic: `${subject} - ${topic}`,
-        language: language,
-        question: doubt
-      });
-      setDoubtAnswer(res.data.answer);
-    } catch (e) {
-      alert("Failed to get answer: " + e.message);
-    }
-    setDoubtLoading(false);
-    setDoubt("");
-  };
-
-  return (
-    <div className="min-h-screen flex flex-col bg-[#FAFAF8]">
-      <TopNav />
-      <div className="flex flex-1">
-        <Sidebar activeView="aiteacher" onNavigate={onNavigate} />
-        
-        <div className="flex-1 overflow-y-auto p-8 lg:p-12">
-          <div className="max-w-4xl mx-auto">
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <h1 className="text-4xl font-serif font-bold text-gray-900 mb-2">AI Teacher Studio</h1>
-                <p className="text-gray-500">Learn with a personalized AI guide.</p>
-              </div>
-              <div className="flex bg-gray-100 p-1 rounded-xl">
-                <button 
-                  onClick={() => setInteractiveMode(false)}
-                  className={`px-6 py-2 font-bold rounded-lg transition-colors ${!interactiveMode ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500 hover:text-gray-700'}`}
-                >
-                  Topic Video
-                </button>
-                <button 
-                  onClick={() => setInteractiveMode(true)}
-                  className={`px-6 py-2 font-bold rounded-lg transition-colors flex items-center gap-2 ${interactiveMode ? 'bg-white shadow-sm text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
-                >
-                  <Circle className="w-2 h-2 fill-green-500 text-green-500" /> Live Interactive
-                </button>
-              </div>
-            </div>
-
-            {interactiveMode ? (
-              <div className="bg-white rounded-2xl p-12 shadow-sm border border-gray-100 mb-8 flex flex-col items-center justify-center text-center">
-                <div className="bg-blue-100 p-6 rounded-full mb-6 relative">
-                  <Monitor className="w-12 h-12 text-blue-600" />
-                  <div className="absolute top-4 right-4 w-4 h-4 bg-green-500 border-4 border-blue-100 rounded-full animate-pulse"></div>
-                </div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">Live D-ID Teacher</h2>
-                <p className="text-gray-600 mb-8 max-w-md">
-                  Because of browser security, the live interactive agent must open in a secure window. Click the button below to start your real-time voice conversation!
-                </p>
-                <a 
-                  href="https://studio.d-id.com/agents/share?id=v2_agt_6H2TaOEB&utm_source=copy&key=Y2tfaEoyWTVVYnk0YWNraXUteF9IcENZ" 
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center gap-3 text-lg"
-                >
-                  <Video className="w-6 h-6" /> Launch Live Teacher
-                </a>
-              </div>
-            ) : (
-              <>
-                {/* Controls */}
-                <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-8">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                    <div>
-                      <label className="block text-sm font-bold text-gray-700 mb-2">Subject</label>
-                      <select 
-                        value={subject} onChange={e => setSubject(e.target.value)}
-                        className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-orange-400"
-                      >
-                        <option value="">Select Subject</option>
-                        <option>Mathematics</option>
-                        <option>Science</option>
-                        <option>Social Studies</option>
-                        <option>English</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-bold text-gray-700 mb-2">Topic</label>
-                      <input 
-                        type="text" value={topic} onChange={e => setTopic(e.target.value)}
-                        placeholder="e.g. Photosynthesis"
-                        className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-orange-400"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-bold text-gray-700 mb-2">Language</label>
-                      <select 
-                        value={language} onChange={e => setLanguage(e.target.value)}
-                        className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-orange-400"
-                      >
-                        <option>English</option>
-                        <option>Hindi</option>
-                        <option>Sanskrit</option>
-                      </select>
-                    </div>
-                  </div>
-                  
-                  <button 
-                    onClick={() => generateVideo("standard")}
-                    disabled={loading}
-                    className="w-full py-4 bg-[#F5A623] hover:bg-[#E0931B] text-gray-900 font-bold rounded-xl shadow-md disabled:opacity-50 flex items-center justify-center gap-2"
-                  >
-                    {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Video className="w-5 h-5" />}
-                    {loading ? "Generating Teacher Video..." : "Watch Topic Video"}
-                  </button>
-                </div>
-
-                {/* Video Player */}
-                {videoData && (
-                  <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-8">
-                    <div className="aspect-video bg-black relative flex items-center justify-center">
-                      {videoData.status === "generating" ? (
-                        <div className="text-white text-center">
-                          <Loader2 className="w-12 h-12 animate-spin mx-auto mb-4 text-orange-500" />
-                          <p>Rendering AI Video via Tavus...</p>
-                          <p className="text-xs text-gray-400 mt-2">ID: {videoData.video_id}</p>
-                        </div>
-                      ) : (
-                        <video controls src={videoData.video_url} className="w-full h-full object-cover">
-                          Your browser does not support the video tag.
-                        </video>
-                      )}
-                    </div>
-                    
-                    <div className="p-6 border-b border-gray-100">
-                      <h3 className="font-bold text-gray-900 text-lg mb-2">Generated Script</h3>
-                      <p className="text-gray-600 text-sm leading-relaxed italic border-l-4 border-orange-200 pl-4">
-                        "{videoData.script}"
-                      </p>
-                      
-                      <div className="mt-6 flex justify-end">
-                        <button 
-                          onClick={() => generateVideo("simplified")}
-                          className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg text-sm transition-colors"
-                        >
-                          <RefreshCw className="w-4 h-4" /> Explain Again (Simplified)
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Doubt Section */}
-                    <div className="p-6 bg-gray-50">
-                      <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
-                        <MessageSquare className="w-5 h-5 text-blue-500" /> Have a doubt?
-                      </h3>
-                      
-                      <div className="flex gap-3 mb-4">
-                        <input 
-                          type="text" 
-                          value={doubt}
-                          onChange={e => setDoubt(e.target.value)}
-                          placeholder="Ask the AI teacher a question..."
-                          className="flex-1 p-3 bg-white border border-gray-200 rounded-xl outline-none focus:border-blue-400"
-                          onKeyDown={e => e.key === 'Enter' && askDoubt()}
-                        />
-                        <button 
-                          onClick={askDoubt}
-                          disabled={doubtLoading}
-                          className="px-6 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-sm disabled:opacity-50 flex items-center gap-2"
-                        >
-                          {doubtLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-4 h-4" />}
-                        </button>
-                      </div>
-
-                      {doubtAnswer && (
-                        <div className="bg-white p-4 rounded-xl border border-blue-100 shadow-sm">
-                          <div className="flex items-center gap-2 mb-2">
-                            <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center">
-                              <span className="text-xs">🎓</span>
-                            </div>
-                            <span className="font-bold text-sm text-blue-900">AI Teacher Response</span>
-                          </div>
-                          <p className="text-sm text-gray-700 leading-relaxed">{doubtAnswer}</p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </>
-            )}
-
           </div>
         </div>
       </div>
