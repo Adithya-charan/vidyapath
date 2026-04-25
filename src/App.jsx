@@ -757,3 +757,25 @@ function ReaderView({ subject, chapter, profile, onBack }) {
     </div>
   );
 }
+
+function AITeacherView({ profile, setProfile, onNavigate }) {
+  return (
+    <div className="min-h-screen flex flex-col bg-[#FAFAF8]">
+      <TopNav profile={profile} setProfile={setProfile} />
+      <div className="flex flex-1 h-[calc(100vh-77px)] overflow-hidden">
+        <Sidebar activeView="aiteacher" onNavigate={onNavigate} profile={profile} />
+        <div className="flex-1 flex flex-col w-full h-full overflow-hidden relative bg-[#1e1e2e]">
+          <div className="absolute inset-0" style={{ top: '-80px', bottom: '-80px' }}>
+            <iframe 
+              src="https://studio.d-id.com/agents/share?id=v2_agt_DcgBxOYo&utm_source=copy&key=Y2tfZHYyNkduU3hYdGw1RFhZckd2Ykhx"
+              style={{ width: '100%', height: 'calc(100% + 160px)', border: 'none' }}
+              allow="camera; microphone; display-capture; autoplay"
+              title="AI Teacher"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
