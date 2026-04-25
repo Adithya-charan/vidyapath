@@ -2,6 +2,10 @@ import { useState } from 'react';
 import { Globe, Bell, LayoutDashboard, BookOpen, FileText, Library, Settings, Plus, MessageSquare, ArrowLeft, CheckCircle2, Circle, Star, ArrowRight, ShieldCheck, Mail, Share2, Award, Zap, Compass, Monitor } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
+// Assets
+import leafVideo from './assets/Leaf_And_Sun_Animation_Generation.mp4';
+import plantVideo from './assets/Animated_Happy_Potted_Plant_Video.mp4';
+
 // ===== DATA =====
 const SUBJECTS = [
   { id: "maths", title: 'Mathematics', desc: 'Calculus & Trigonometry Fundamentals', icon: '🧮', iconBg: 'bg-orange-100', iconColor: 'text-orange-500', progress: 85, modules: 12 },
@@ -21,9 +25,9 @@ const SCIENCE_CHAPTERS = [
 
 const CHAPTER_1_CONTENT = [
   { type: "text", content: "All living organisms require food. Plants are the only organisms that can prepare their own food. They do this through a process called photosynthesis. In this process, plants use sunlight, water, and carbon dioxide to make glucose — their primary source of energy." },
-  { type: "avatar_video", topic: "How Plants Make Food", thumbnail: "https://placehold.co/640x360/F5A623/FFFFFF?text=AI+Teacher+▶", languages: ["English", "Hindi", "Sanskrit"] },
+  { type: "avatar_video", topic: "How Plants Make Food", video: leafVideo, thumbnail: "https://placehold.co/640x360/F5A623/FFFFFF?text=AI+Teacher+▶", languages: ["English", "Hindi", "Sanskrit"] },
   { type: "text", content: "Photosynthesis takes place mainly in the leaves of plants. Leaves have a green pigment called chlorophyll, which absorbs sunlight. The leaves also have tiny pores called stomata through which carbon dioxide enters the plant." },
-  { type: "cartoon_video", topic: "Journey of Water in a Plant", thumbnail: "https://placehold.co/640x480/2E7D52/FFFFFF?text=🎨+Visual+Story+▶", languages: ["English", "Hindi", "Sanskrit"] },
+  { type: "cartoon_video", topic: "Journey of Water in a Plant", video: plantVideo, thumbnail: "https://placehold.co/640x480/2E7D52/FFFFFF?text=🎨+Visual+Story+▶", languages: ["English", "Hindi", "Sanskrit"] },
   { type: "text", content: "Plants are called autotrophs because they produce their own food. Animals and humans are called heterotrophs because they depend on plants or other animals for food." }
 ];
 
@@ -658,8 +662,20 @@ function ReaderView({ subject, chapter, profile, onBack }) {
                   </div>
                   <h3 className="text-2xl font-bold text-gray-900 mb-4">{block.topic}</h3>
                   
-                  <div className="relative rounded-xl overflow-hidden aspect-video bg-gray-100 mb-6 cursor-pointer border border-gray-100">
-                    <img src={block.thumbnail} alt={block.topic} className="w-full h-full object-cover" />
+                  <div className="relative rounded-xl overflow-hidden aspect-video bg-gray-100 mb-6 border border-gray-100 shadow-inner">
+                    {block.video ? (
+                      <video 
+                        src={block.video} 
+                        className="w-full h-full object-cover"
+                        controls
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                      />
+                    ) : (
+                      <img src={block.thumbnail} alt={block.topic} className="w-full h-full object-cover" />
+                    )}
                   </div>
 
                   <div className="flex gap-2">
