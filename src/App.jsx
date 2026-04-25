@@ -1,10 +1,7 @@
 import { useState } from 'react';
-import { Globe, Bell, LayoutDashboard, BookOpen, FileText, Library, Settings, Plus, MessageSquare, ArrowLeft, CheckCircle2, Circle, Star, ArrowRight, ShieldCheck, Mail, Share2, Award, Zap, Compass, Monitor } from 'lucide-react';
+import { Globe, Bell, LayoutDashboard, BookOpen, FileText, Library, Settings, Plus, MessageSquare, ArrowLeft, CheckCircle2, Circle, Star, ArrowRight, ShieldCheck, Mail, Share2, Award, Zap, Compass, Monitor, Video, Send, Loader2, RefreshCw } from 'lucide-react';
 import confetti from 'canvas-confetti';
-
-// Assets
-import leafVideo from './assets/Leaf_And_Sun_Animation_Generation.mp4';
-import plantVideo from './assets/Animated_Happy_Potted_Plant_Video.mp4';
+import axios from 'axios';
 
 // ===== DATA =====
 const SUBJECTS = [
@@ -77,6 +74,13 @@ export default function App() {
           chapter={activeChapter}
           profile={profile}
           onBack={() => navigateTo('chapterList')}
+        />
+      )}
+
+      {view === 'aiteacher' && (
+        <AITeacherView 
+          profile={profile}
+          onBack={() => navigateTo('dashboard')}
         />
       )}
     </div>
@@ -415,6 +419,7 @@ function Sidebar({ activeView, onNavigate }) {
       <div className="flex-1 py-4">
         <NavItem icon={<LayoutDashboard className="w-5 h-5" />} label="Dashboard" active={activeView === 'dashboard'} onClick={() => onNavigate('dashboard')} />
         <NavItem icon={<BookOpen className="w-5 h-5" />} label="My Learning" active={activeView === 'learning'} onClick={() => onNavigate('dashboard')} />
+        <NavItem icon={<Video className="w-5 h-5" />} label="AI Teacher" active={activeView === 'aiteacher'} onClick={() => onNavigate('aiteacher')} />
         <NavItem icon={<FileText className="w-5 h-5" />} label="Assignments" />
         <NavItem icon={<Library className="w-5 h-5" />} label="Library" />
         <NavItem icon={<Settings className="w-5 h-5" />} label="Settings" />
@@ -452,7 +457,7 @@ function DashboardView({ profile, onSelectSubject }) {
     <div className="min-h-screen flex flex-col bg-[#FAFAF8]">
       <TopNav />
       <div className="flex flex-1">
-        <Sidebar activeView="dashboard" onNavigate={() => {}} />
+        <Sidebar activeView="dashboard" onNavigate={(v) => { if (v === 'aiteacher') window.scrollTo(0, 0); else {} }} />
         
         <div className="flex-1 overflow-y-auto p-8 relative">
           <div className="bg-white rounded-2xl border border-gray-100 p-8 shadow-sm flex flex-col md:flex-row items-center justify-between mb-10">
@@ -712,6 +717,188 @@ function ReaderView({ subject, chapter, profile, onBack }) {
                 <span>Chapter Complete! Excellent work.</span>
               </div>
             )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AITeacherView({ profile, onBack }) {
+  const [subject, setSubject] = useState("");
+  const [topic, setTopic] = useState("");
+  const [language, setLanguage] = useState(profile.language || "English");
+  const [videoData, setVideoData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [doubt, setDoubt] = useState("");
+  const [doubtAnswer, setDoubtAnswer] = useState(null);
+  const [doubtLoading, setDoubtLoading] = useState(false);
+
+  const generateVideo = async (difficulty = "standard") => {
+    if (!subject || !topic) return alert("Please select a subject and topic");
+    setLoading(true);
+    setVideoData(null);
+    setDoubtAnswer(null);
+    try {
+      const res = await axios.post("http://localhost:8000/api/generate-video", {
+        topic: `${subject} - ${topic}`,
+        language: language,
+        difficulty: difficulty
+      });
+      setVideoData(res.data);
+    } catch (e) {
+      alert("Failed to generate video: " + e.message);
+    }
+    setLoading(false);
+  };
+
+  const askDoubt = async () => {
+    if (!doubt) return;
+    setDoubtLoading(true);
+    try {
+      const res = await axios.post("http://localhost:8000/api/ask-doubt", {
+        topic: `${subject} - ${topic}`,
+        language: language,
+        question: doubt
+      });
+      setDoubtAnswer(res.data.answer);
+    } catch (e) {
+      alert("Failed to get answer: " + e.message);
+    }
+    setDoubtLoading(false);
+    setDoubt("");
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col bg-[#FAFAF8]">
+      <TopNav />
+      <div className="flex flex-1">
+        <Sidebar activeView="aiteacher" onNavigate={onBack} />
+        
+        <div className="flex-1 overflow-y-auto p-8 lg:p-12">
+          <div className="max-w-4xl mx-auto">
+            <h1 className="text-4xl font-serif font-bold text-gray-900 mb-2">AI Teacher Studio</h1>
+            <p className="text-gray-500 mb-8">Generate personalized explanation videos using AI.</p>
+
+            {/* Controls */}
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-2">Subject</label>
+                  <select 
+                    value={subject} onChange={e => setSubject(e.target.value)}
+                    className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-orange-400"
+                  >
+                    <option value="">Select Subject</option>
+                    <option>Mathematics</option>
+                    <option>Science</option>
+                    <option>Social Studies</option>
+                    <option>English</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-2">Topic</label>
+                  <input 
+                    type="text" value={topic} onChange={e => setTopic(e.target.value)}
+                    placeholder="e.g. Photosynthesis"
+                    className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-orange-400"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-2">Language</label>
+                  <select 
+                    value={language} onChange={e => setLanguage(e.target.value)}
+                    className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-orange-400"
+                  >
+                    <option>English</option>
+                    <option>Hindi</option>
+                    <option>Sanskrit</option>
+                  </select>
+                </div>
+              </div>
+              
+              <button 
+                onClick={() => generateVideo("standard")}
+                disabled={loading}
+                className="w-full py-4 bg-[#F5A623] hover:bg-[#E0931B] text-gray-900 font-bold rounded-xl shadow-md disabled:opacity-50 flex items-center justify-center gap-2"
+              >
+                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Video className="w-5 h-5" />}
+                {loading ? "Generating Teacher Video..." : "Watch AI Teacher Video"}
+              </button>
+            </div>
+
+            {/* Video Player */}
+            {videoData && (
+              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-8">
+                <div className="aspect-video bg-black relative flex items-center justify-center">
+                  {videoData.status === "generating" ? (
+                    <div className="text-white text-center">
+                      <Loader2 className="w-12 h-12 animate-spin mx-auto mb-4 text-orange-500" />
+                      <p>Rendering AI Video via Tavus...</p>
+                      <p className="text-xs text-gray-400 mt-2">ID: {videoData.video_id}</p>
+                    </div>
+                  ) : (
+                    <video controls src={videoData.video_url} className="w-full h-full object-cover">
+                      Your browser does not support the video tag.
+                    </video>
+                  )}
+                </div>
+                
+                <div className="p-6 border-b border-gray-100">
+                  <h3 className="font-bold text-gray-900 text-lg mb-2">Generated Script</h3>
+                  <p className="text-gray-600 text-sm leading-relaxed italic border-l-4 border-orange-200 pl-4">
+                    "{videoData.script}"
+                  </p>
+                  
+                  <div className="mt-6 flex justify-end">
+                    <button 
+                      onClick={() => generateVideo("simplified")}
+                      className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg text-sm transition-colors"
+                    >
+                      <RefreshCw className="w-4 h-4" /> Explain Again (Simplified)
+                    </button>
+                  </div>
+                </div>
+
+                {/* Doubt Section */}
+                <div className="p-6 bg-gray-50">
+                  <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <MessageSquare className="w-5 h-5 text-blue-500" /> Have a doubt?
+                  </h3>
+                  
+                  <div className="flex gap-3 mb-4">
+                    <input 
+                      type="text" 
+                      value={doubt}
+                      onChange={e => setDoubt(e.target.value)}
+                      placeholder="Ask the AI teacher a question..."
+                      className="flex-1 p-3 bg-white border border-gray-200 rounded-xl outline-none focus:border-blue-400"
+                      onKeyDown={e => e.key === 'Enter' && askDoubt()}
+                    />
+                    <button 
+                      onClick={askDoubt}
+                      disabled={doubtLoading}
+                      className="px-6 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-sm disabled:opacity-50 flex items-center gap-2"
+                    >
+                      {doubtLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-4 h-4" />}
+                    </button>
+                  </div>
+
+                  {doubtAnswer && (
+                    <div className="bg-white p-4 rounded-xl border border-blue-100 shadow-sm">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center">
+                          <span className="text-xs">🎓</span>
+                        </div>
+                        <span className="font-bold text-sm text-blue-900">AI Teacher Response</span>
+                      </div>
+                      <p className="text-sm text-gray-700 leading-relaxed">{doubtAnswer}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
           </div>
         </div>
       </div>
