@@ -49,7 +49,7 @@ async def generate_video(req: ExplainRequest):
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt}
             ],
-            model="llama3-70b-8192",
+            model="llama-3.3-70b-versatile",
         )
         script = chat_completion.choices[0].message.content
     except Exception as e:
@@ -113,14 +113,16 @@ async def ask_doubt(req: DoubtRequest):
     try:
         system_prompt = f"You are a helpful teacher. Answer the student's doubt about {req.topic} in {req.language} briefly and clearly."
         
-        chat_completion = groq_client.chat.completions.create(
+        response = groq_client.chat.completions.create(
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": req.question}
             ],
-            model="llama3-70b-8192",
+            model="llama-3.3-70b-versatile",
+            temperature=0.7,
+            max_tokens=150,
         )
-        answer = chat_completion.choices[0].message.content
+        answer = response.choices[0].message.content
         return {"answer": answer}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Groq API error: {str(e)}")
