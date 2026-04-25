@@ -53,6 +53,7 @@ export default function App() {
             setActiveSubject(subj);
             navigateTo('chapterList');
           }} 
+          onNavigate={navigateTo}
         />
       )}
 
@@ -65,6 +66,7 @@ export default function App() {
             setActiveChapter(chap);
             navigateTo('reader');
           }}
+          onNavigate={navigateTo}
         />
       )}
 
@@ -74,6 +76,7 @@ export default function App() {
           chapter={activeChapter}
           profile={profile}
           onBack={() => navigateTo('chapterList')}
+          onNavigate={navigateTo}
         />
       )}
 
@@ -81,6 +84,7 @@ export default function App() {
         <AITeacherView 
           profile={profile}
           onBack={() => navigateTo('dashboard')}
+          onNavigate={navigateTo}
         />
       )}
     </div>
@@ -450,14 +454,14 @@ function NavItem({ icon, label, active, onClick }) {
   );
 }
 
-function DashboardView({ profile, onSelectSubject }) {
+function DashboardView({ profile, onSelectSubject, onNavigate }) {
   const name = profile.name || 'Arjun';
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FAFAF8]">
       <TopNav />
       <div className="flex flex-1">
-        <Sidebar activeView="dashboard" onNavigate={(v) => { if (v === 'aiteacher') window.scrollTo(0, 0); else {} }} />
+        <Sidebar activeView="dashboard" onNavigate={onNavigate} />
         
         <div className="flex-1 overflow-y-auto p-8 relative">
           <div className="bg-white rounded-2xl border border-gray-100 p-8 shadow-sm flex flex-col md:flex-row items-center justify-between mb-10">
@@ -531,7 +535,7 @@ function DashboardView({ profile, onSelectSubject }) {
   );
 }
 
-function ChapterListView({ subject, profile, onSelectChapter, onBack }) {
+function ChapterListView({ subject, profile, onSelectChapter, onBack, onNavigate }) {
   const chapters = subject.id === 'science' ? SCIENCE_CHAPTERS : [];
   const [activeId, setActiveId] = useState(1);
   const activeChapter = chapters.find(c => c.id === activeId);
@@ -540,7 +544,7 @@ function ChapterListView({ subject, profile, onSelectChapter, onBack }) {
     <div className="min-h-screen flex flex-col bg-[#FAFAF8]">
       <TopNav />
       <div className="flex flex-1 overflow-hidden">
-        <Sidebar activeView="learning" onNavigate={onBack} />
+        <Sidebar activeView="learning" onNavigate={onNavigate} />
         
         <div className="flex-1 flex overflow-hidden">
           <div className="w-80 border-r border-gray-100 bg-white flex flex-col h-[calc(100vh-77px)] shrink-0 overflow-y-auto">
@@ -620,7 +624,7 @@ function ChapterListView({ subject, profile, onSelectChapter, onBack }) {
   );
 }
 
-function ReaderView({ subject, chapter, profile, onBack }) {
+function ReaderView({ subject, chapter, profile, onBack, onNavigate }) {
   const [completed, setCompleted] = useState(false);
 
   const handleComplete = () => {
@@ -724,7 +728,7 @@ function ReaderView({ subject, chapter, profile, onBack }) {
   );
 }
 
-function AITeacherView({ profile, onBack }) {
+function AITeacherView({ profile, onBack, onNavigate }) {
   const [subject, setSubject] = useState("");
   const [topic, setTopic] = useState("");
   const [language, setLanguage] = useState(profile.language || "English");
@@ -774,7 +778,7 @@ function AITeacherView({ profile, onBack }) {
     <div className="min-h-screen flex flex-col bg-[#FAFAF8]">
       <TopNav />
       <div className="flex flex-1">
-        <Sidebar activeView="aiteacher" onNavigate={onBack} />
+        <Sidebar activeView="aiteacher" onNavigate={onNavigate} />
         
         <div className="flex-1 overflow-y-auto p-8 lg:p-12">
           <div className="max-w-4xl mx-auto">
